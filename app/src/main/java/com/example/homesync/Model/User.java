@@ -3,7 +3,7 @@ package com.example.homesync.Model;
 public class User {
 
     // ATRIBUTOS
-    private int id;
+    private String id;
     private String name;
     private String nickname;
     private String mail;
@@ -20,7 +20,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, String nickname, String mail, String password, int points, int weeklyPoints, int monthlyPoints, String groupCode, String image) {
+    public User(String id, String name, String nickname, String mail, String password, int points, int weeklyPoints, int monthlyPoints, String groupCode, String image) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -33,7 +33,7 @@ public class User {
         this.image = image;
     }
 
-    public User(int id, String name, String nickname, String mail, String password) {
+    public User(String id, String name, String nickname, String mail, String password) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -49,11 +49,11 @@ public class User {
 
 
     // GETTERS AND SETTERS
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

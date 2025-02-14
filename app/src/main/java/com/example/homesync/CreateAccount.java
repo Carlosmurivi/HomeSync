@@ -2,6 +2,7 @@ package com.example.homesync;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.homesync.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,7 +44,7 @@ public class CreateAccount extends AppCompatActivity {
     private Button back;
 
 
-    FirebaseFirestore mFirestore;
+    //FirebaseFirestore mFirestore;
     FirebaseAuth mAuth;
 
     @Override
@@ -50,7 +52,7 @@ public class CreateAccount extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        mFirestore = FirebaseFirestore.getInstance();
+        //mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -89,21 +91,30 @@ public class CreateAccount extends AppCompatActivity {
 
                 if (mail.equals("")){
                     mailLayout.setError("Este campo es obligatorio");
+                } else if (!isValidEmail(mail)) {
+                    mailLayout.setError("Formato de correo inválido");
                 } else {
                     mailLayout.setError(null);   // Quita el mensaje de error
                 }
 
                 if (password.equals("")){
                     passwordLayout.setError("Este campo es obligatorio");
+                } else if (password.length() < 6) {
+                    passwordLayout.setError("La contraseña debe tener al menos 6 caracteres");
                 } else {
                     passwordLayout.setError(null);   // Quita el mensaje de error
                 }
 
-                if (!password.equals("") && !mail.equals("") && !nickname.equals("") && !name.equals("")){
+                if (!password.equals("") && password.length() >= 6 && isValidEmail(mail) && !mail.equals("") && !nickname.equals("") && !name.equals("")){
                     registerUser(name, nickname, mail, password);
                 }
             }
         });
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        return email.matches(emailPattern);
     }
 
     private void registerUser(String name, String nickname, String mail, String password) {
@@ -111,7 +122,7 @@ public class CreateAccount extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 //String id = mAuth.getCurrentUser().getUid();
-                String id = "1";
+                String id = "2";
                 Map<String, Object> map = new HashMap<>();
                 map.put("id", id);
                 map.put("name", name);
@@ -119,19 +130,26 @@ public class CreateAccount extends AppCompatActivity {
                 map.put("mail", mail);
                 map.put("password", password);
 
-                mFirestore.collection("user").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                User user = new User(id, name, nickname, mail, password);
+
+                Log.e("user", user.getMail());
+
+                FirebaseRealtimeDatabase.saveUser(user);
+
+                /*mFirestore.collection("user").document(id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         finish();
                         startActivity(new Intent(CreateAccount.this, MainActivity.class));
-                        Toast.makeText(CreateAccount.this, "Error al registrar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccount.this, "Usuario Creado", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(CreateAccount.this, "Error al guardar", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
+                Toast.makeText(CreateAccount.this, "Usuario Creado", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
