@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "583736049390",
+    "firebase_url": "https://homesync-cdae4-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "homesync-cdae4",
+    "storage_bucket": "homesync-cdae4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583736049390:android:384e13b647e1a7fa7a3dff",
+        "android_client_info": {
+          "package_name": "com.example.homesync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbIkRBCXGenTzFjEJjaJaR5gv9Ht3IvsE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
