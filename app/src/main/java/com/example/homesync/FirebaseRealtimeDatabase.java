@@ -1,10 +1,14 @@
 package com.example.homesync;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.homesync.Model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,18 +22,16 @@ import java.util.Map;
 
 public class FirebaseRealtimeDatabase {
 
-    public static void saveUser(User user){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
-
-        List<User> users = new ArrayList<>();
-        users.add(user);
-        // Utiliza push() para agregar un nuevo usuario sin sobrescribir los existentes
-        myRef.push().setValue(user).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.e("111", "Usuario guardado correctamente.");
-            } else {
-                Log.e("111", "Error al guardar el usuario: " + task.getException().getMessage());
+    public static void saveUser(User user, String id, Context context){
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(context, "Usuario Creado", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Error al registrar", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

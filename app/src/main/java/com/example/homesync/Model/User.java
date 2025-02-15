@@ -33,6 +33,19 @@ public class User {
         this.image = image;
     }
 
+    public User(String id, String name, String nickname, String mail) {
+        this.id = id;
+        this.name = name;
+        this.nickname = nickname;
+        this.mail = mail;
+        this.password = "";
+        this.points = 0;
+        this.weeklyPoints = 0;
+        this.monthlyPoints = 0;
+        this.groupCode = "";
+        this.image = "https://res.cloudinary.com/dlclglmr6/image/upload/v1739489498/usuario_xftkhf.png";
+    }
+
     public User(String id, String name, String nickname, String mail, String password) {
         this.id = id;
         this.name = name;

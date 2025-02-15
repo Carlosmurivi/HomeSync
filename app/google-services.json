@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "583736049390",
+    "firebase_url": "https://homesync-cdae4-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "homesync-cdae4",
     "storage_bucket": "homesync-cdae4.firebasestorage.app"
   },
