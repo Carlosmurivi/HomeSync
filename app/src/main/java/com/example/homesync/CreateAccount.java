@@ -95,6 +95,10 @@ public class CreateAccount extends AppCompatActivity {
                 }
             }
         });
+
+        back.setOnClickListener(v -> {
+            finish();
+        });
     }
 
     private boolean isValidEmail(String email) {
@@ -111,6 +115,7 @@ public class CreateAccount extends AppCompatActivity {
                     User user = new User(id, name, nickname, mail);
 
                     FirebaseRealtimeDatabase.saveUser(user, id, CreateAccount.this);
+                    Index.activityA.finish();
                     finish();
                     startActivity(new Intent(CreateAccount.this, MainActivity.class));
                 } else {
