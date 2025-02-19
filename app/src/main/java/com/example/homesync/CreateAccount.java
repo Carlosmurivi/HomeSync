@@ -115,6 +115,7 @@ public class CreateAccount extends AppCompatActivity {
                     User user = new User(id, name, nickname, mail);
 
                     FirebaseRealtimeDatabase.saveUser(user, id, CreateAccount.this);
+
                     Index.activityA.finish();
                     finish();
                     startActivity(new Intent(CreateAccount.this, MainActivity.class));

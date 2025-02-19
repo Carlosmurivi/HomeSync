@@ -20,6 +20,15 @@
         android:theme="@style/Theme.HomeSync"
         tools:targetApi="31">
         <activity
+            android:name=".Fragments.SettingsFragment"
+            android:exported="false" />
+        <activity
+            android:name=".Fragments.ProfileFragment"
+            android:exported="false" />
+        <activity
+            android:name=".Profile"
+            android:exported="false" />
+        <activity
             android:name=".Login"
             android:exported="false" />
         <activity
