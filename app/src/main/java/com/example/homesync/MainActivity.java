@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SettingsFragment(), R.drawable.baseline_settings_24);
         adapter.addFragment(new ProfileFragment(), R.drawable.productos_de_limpieza__6_);
+        adapter.addFragment(new SettingsFragment(), R.drawable.baseline_settings_24);
 
 
         /*FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.this, new FirebaseRealtimeDatabase.UserCallback() {

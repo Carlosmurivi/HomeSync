@@ -7,7 +7,7 @@ public class Group {
 
     // ATRIBUTOS
     private String code;
-    private List<User> userList;
+    private List<String> userIdList;
     private List<Task> taskList;
     private List<Product> shoppingList;
 
@@ -17,16 +17,16 @@ public class Group {
     public Group() {
     }
 
-    public Group(String code, List<User> userList, List<Task> taskList, List<Product> shoppingList) {
+    public Group(String code, List<String> userIdList, List<Task> taskList, List<Product> shoppingList) {
         this.code = code;
-        this.userList = userList;
+        this.userIdList = userIdList;
         this.taskList = taskList;
         this.shoppingList = shoppingList;
     }
 
-    public Group(String code, List<User> userList) {
+    public Group(String code, List<String> userIdList) {
         this.code = code;
-        this.userList = userList;
+        this.userIdList = userIdList;
         this.taskList = new ArrayList<>();
         this.shoppingList = new ArrayList<>();
     }
@@ -42,12 +42,12 @@ public class Group {
         this.code = code;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<String> getUserIdList() {
+        return userIdList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUserList(List<String> userIdList) {
+        this.userIdList = userIdList;
     }
 
     public List<Task> getTaskList() {
@@ -69,8 +69,8 @@ public class Group {
 
 
     // METODOS
-    public void addUser(User user){
-        userList.add(user);
+    public void addUser(String id){
+        userIdList.add(id);
     }
 
     public void addTask(Task task){
