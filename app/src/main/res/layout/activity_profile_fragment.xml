@@ -8,15 +8,16 @@
 
 
     <!-- Imagen de Perfil -->
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="55dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="55dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:shapeAppearanceOverlay="@style/RoundImageView" />
 
     <!-- Título -->
     <TextView
@@ -47,11 +48,12 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:visibility="gone"/>
 
+    <!-- Floating Action Button -->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!-- Floating Action Button -->
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -75,12 +77,12 @@
         android:layout_height="wrap_content"
         android:text="No existe ningún grupo"
         android:textAlignment="center"
-        android:textSize="@dimen/title"
+        android:textSize="@dimen/title2"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="220dp"
         android:visibility="gone"/>
 
     <Button
@@ -89,9 +91,9 @@
         android:layout_height="wrap_content"
         android:text="Crear Grupo"
         android:textSize="@dimen/button"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="100dp"
         android:layout_marginHorizontal="65dp"
-        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintTop_toBottomOf="@id/createGroupTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

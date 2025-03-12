@@ -77,6 +77,24 @@ public class FirebaseRealtimeDatabase {
         });
     }
 
+    public static void updateUserImage(String userId, String newImageUrl, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico de la URL de la imagen
+        mDatabase.child("users").child(userId).child("image").setValue(newImageUrl)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Imagen de usuario actualizada", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error al actualizar la imagen", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
     public interface UsersCallback {
         void onSuccess(List<User> users);
         void onFailure(Exception e);
