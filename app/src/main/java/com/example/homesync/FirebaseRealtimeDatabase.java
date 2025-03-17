@@ -94,6 +94,23 @@ public class FirebaseRealtimeDatabase {
                 });
     }
 
+    public static void updateUserNickname(String userId, String newNickname, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico del nickname del usuario
+        mDatabase.child("users").child(userId).child("nickname").setValue(newNickname)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Apodo actualizado", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error al actualizar el apodo", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
     public interface UsersCallback {
         void onSuccess(List<User> users);

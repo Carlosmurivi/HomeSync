@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.homesync.CloudinaryDataBase;
+import com.example.homesync.Dialogs.DialogEditNickname;
 import com.example.homesync.FirebaseRealtimeDatabase;
 import com.example.homesync.Index;
 import com.example.homesync.MainActivity;
@@ -47,8 +48,9 @@ public class SettingsFragment extends Fragment {
     private String urlFoto;
     private Uri selectedImageUri;
     private boolean imagenAñadida = false;
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     private ImageView imageProfile;
+    private static TextView nicknameUser;
 
 
     @Nullable
@@ -60,7 +62,7 @@ public class SettingsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         imageProfile = view.findViewById(R.id.imageProfile);
-        TextView nicknameUser = view.findViewById(R.id.nicknameUser);
+        nicknameUser = view.findViewById(R.id.nicknameUser);
         TextView mailUser = view.findViewById(R.id.mailUser);
         ImageButton changeNickname = view.findViewById(R.id.changeNickname);
         Button changePassword = view.findViewById(R.id.changePassword);
@@ -119,11 +121,9 @@ public class SettingsFragment extends Fragment {
         imageProfile.setOnClickListener(v -> abrirGaleria());
 
         // Cambiar Apodo
-        changeNickname.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.activityA, "¡Editar Apodo!", Toast.LENGTH_SHORT).show();
-            }
+        changeNickname.setOnClickListener(v -> {
+            DialogEditNickname dialog = DialogEditNickname.newInstance("Introduce tu nuevo apodo", "Nuevo apodo");
+            dialog.show(getActivity().getSupportFragmentManager(), "DialogEditNickname");
         });
 
         return view;
@@ -207,5 +207,13 @@ public class SettingsFragment extends Fragment {
             e.printStackTrace();
         }
         return imageUri;
+    }
+
+    public static FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
+    public static TextView getNicknameUser() {
+        return nicknameUser;
     }
 }
