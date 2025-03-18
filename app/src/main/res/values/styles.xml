@@ -4,4 +4,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <style name="CustomAlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">#B437A4</item>  <!-- Color de la barra superior -->
+        <item name="android:background">#D6AED2</item>  <!-- Fondo del diálogo -->
+        <item name="android:textColorPrimary">#9E3190</item>  <!-- Color del texto -->
+    </style>
 </resources>

@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -122,9 +124,11 @@ public class SettingsFragment extends Fragment {
 
         // Cambiar Apodo
         changeNickname.setOnClickListener(v -> {
-            DialogEditNickname dialog = DialogEditNickname.newInstance("Introduce tu nuevo apodo", "Nuevo apodo");
+            DialogEditNickname dialog = DialogEditNickname.newInstance("Introduce tu apodo", "Nuevo apodo");
             dialog.show(getActivity().getSupportFragmentManager(), "DialogEditNickname");
         });
+
+        changePassword.setOnClickListener(v -> mostrarDialogoConfirmacion());
 
         return view;
     }
@@ -207,6 +211,32 @@ public class SettingsFragment extends Fragment {
             e.printStackTrace();
         }
         return imageUri;
+    }
+
+    private void mostrarDialogoConfirmacion() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.activityA, R.style.CustomAlertDialog);
+        builder.setTitle("Confirmación");
+        builder.setMessage("¿Estás seguro de que deseas continuar?");
+
+        // Botón Confirmar
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.activityA, "Acción confirmada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Botón Cancelar
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.activityA, "Acción cancelada", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar el diálogo
+        builder.create().show();
     }
 
     public static FirebaseAuth getmAuth() {

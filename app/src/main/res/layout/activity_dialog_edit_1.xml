@@ -3,15 +3,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/background"
     android:padding="20dp">
 
     <TextView
         android:id="@+id/dialogMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:text="Este es un diálogo personalizado"
-        android:textSize="18sp"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:textColor="@color/texts"
         android:textStyle="bold" />
 
     <!-- Contraseña -->
@@ -20,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Texto"
+        android:textColorHint="@color/texts"
         android:layout_marginTop="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -38,6 +42,7 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:textColor="@color/white"
             android:text="Cancelar"/>
 
         <Button
@@ -45,7 +50,8 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
+            android:textColor="@color/white"
             android:text="Aceptar"/>
     </LinearLayout>
 </LinearLayout>
