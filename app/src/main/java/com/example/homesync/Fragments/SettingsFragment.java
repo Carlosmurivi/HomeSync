@@ -121,6 +121,25 @@ public class SettingsFragment extends Fragment {
 
 
 
+        // Cambiar Imagen de Perfil
+        imageProfile.setOnClickListener(v -> openGallery());
+
+
+        // Cambiar Apodo
+        changeNickname.setOnClickListener(v -> {
+            DialogEditNickname dialog = DialogEditNickname.newInstance("Introduce tu apodo", "Nuevo apodo");
+            dialog.show(getActivity().getSupportFragmentManager(), "DialogEditNickname");
+        });
+
+
+        // Cambiar Contraseña
+        changePassword.setOnClickListener(v -> dialogChangePassword());
+
+
+        // Abandonar grupo
+        leaveGroup.setOnClickListener(v -> leaveGroup());
+
+
         // Cerrar Sesión
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,17 +149,6 @@ public class SettingsFragment extends Fragment {
                 startActivity(new Intent(MainActivity.activityA, Index.class));
             }
         });
-
-        // Cambiar Imagen de Perfil
-        imageProfile.setOnClickListener(v -> openGallery());
-
-        // Cambiar Apodo
-        changeNickname.setOnClickListener(v -> {
-            DialogEditNickname dialog = DialogEditNickname.newInstance("Introduce tu apodo", "Nuevo apodo");
-            dialog.show(getActivity().getSupportFragmentManager(), "DialogEditNickname");
-        });
-
-        changePassword.setOnClickListener(v -> dialogChangePassword());
 
         return view;
     }
@@ -260,6 +268,11 @@ public class SettingsFragment extends Fragment {
 
         // Mostrar el diálogo
         builder.create().show();
+    }
+
+    private void leaveGroup(){
+        FirebaseRealtimeDatabase.updateUserGroupCode(mAuth.getCurrentUser().getUid(), "", MainActivity.activityA);
+        MainActivity.activityA.recreate();
     }
 
     public static FirebaseAuth getmAuth() {

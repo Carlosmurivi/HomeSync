@@ -41,22 +41,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new SettingsFragment(), R.drawable.baseline_settings_24);
 
 
-        /*FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.this, new FirebaseRealtimeDatabase.UserCallback() {
-            @Override
-            public void onSuccess(User user) {
-                if(user.getGroupCode().trim().equals("")) {
-                    adapter.addFragment(new SettingsFragment(), R.drawable.baseline_settings_24);
-                } else {
-                    adapter.addFragment(new ProfileFragment(), R.drawable.productos_de_limpieza__6_);
-                }
-            }
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });*/
-
-
 
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
@@ -68,6 +52,5 @@ public class MainActivity extends AppCompatActivity {
                 tab.setIcon(adapter.getIcon(i));
             }
         }
-
     }
 }

@@ -94,6 +94,31 @@ public class FirebaseRealtimeDatabase {
                 });
     }
 
+    public static void updateUserGroupCode(String userId, String groupCode, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico del codigo del grupo
+        mDatabase.child("users").child(userId).child("groupCode").setValue(groupCode)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            if(groupCode.equals("")){
+                                Toast.makeText(MainActivity.activityA, "Grupo abandonado", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.activityA, "Unido a un grupo", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if(groupCode.equals("")){
+                                Toast.makeText(MainActivity.activityA, "Error al abandonar el grupo", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.activityA, "Error al unirte al grupo", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+    }
+
     public static void updateUserNickname(String userId, String newNickname, Context context) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 

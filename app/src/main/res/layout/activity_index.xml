@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
+            android:textColor="@color/white"
             android:textSize="@dimen/button"
             android:text="Iniciar Sesión" />
 
@@ -37,6 +38,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="@color/white"
             android:textSize="@dimen/button"
             android:layout_marginTop="20dp"
             android:text="Crear Cuenta" />
