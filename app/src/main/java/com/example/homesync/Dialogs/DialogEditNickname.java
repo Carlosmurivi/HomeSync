@@ -74,10 +74,6 @@ public class DialogEditNickname extends DialogFragment {
                     public void onSuccess(User user) {
                         FirebaseRealtimeDatabase.updateUserNickname(user.getId(), nickname, MainActivity.activityA);
 
-                        /*Intent intent = requireActivity().getIntent();
-                        requireActivity().finish();
-                        startActivity(intent);*/
-
                         SettingsFragment.getNicknameUser().setText(nickname);
 
                         dismiss();

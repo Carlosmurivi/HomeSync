@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +30,11 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.homesync.CloudinaryDataBase;
+import com.example.homesync.Dialogs.DialogChangePassword;
 import com.example.homesync.Dialogs.DialogEditNickname;
 import com.example.homesync.FirebaseRealtimeDatabase;
 import com.example.homesync.Index;
+import com.example.homesync.Login;
 import com.example.homesync.MainActivity;
 import com.example.homesync.Model.User;
 import com.example.homesync.Prueba;
@@ -43,6 +46,15 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class SettingsFragment extends Fragment {
 
@@ -120,7 +132,7 @@ public class SettingsFragment extends Fragment {
         });
 
         // Cambiar Imagen de Perfil
-        imageProfile.setOnClickListener(v -> abrirGaleria());
+        imageProfile.setOnClickListener(v -> openGallery());
 
         // Cambiar Apodo
         changeNickname.setOnClickListener(v -> {
@@ -128,12 +140,12 @@ public class SettingsFragment extends Fragment {
             dialog.show(getActivity().getSupportFragmentManager(), "DialogEditNickname");
         });
 
-        changePassword.setOnClickListener(v -> mostrarDialogoConfirmacion());
+        changePassword.setOnClickListener(v -> dialogChangePassword());
 
         return view;
     }
 
-    private void abrirGaleria() {
+    private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
@@ -213,16 +225,27 @@ public class SettingsFragment extends Fragment {
         return imageUri;
     }
 
-    private void mostrarDialogoConfirmacion() {
+    private void dialogChangePassword() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.activityA, R.style.CustomAlertDialog);
         builder.setTitle("Confirmación");
-        builder.setMessage("¿Estás seguro de que deseas continuar?");
+        builder.setMessage("Se te enviará un enlace al correo");
 
         // Botón Confirmar
         builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.activityA, "Acción confirmada", Toast.LENGTH_SHORT).show();
+                String email = mAuth.getCurrentUser().getEmail();
+
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Log.d("FirebaseAuth", "Correo de restablecimiento enviado a: " + email);
+                                Toast.makeText(getContext(), "Correo enviado. Revisa tu bandeja de entrada.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.e("FirebaseAuth", "Error al enviar correo de restablecimiento", task.getException());
+                                Toast.makeText(getContext(), "Error al enviar el correo de restablecimiento", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
