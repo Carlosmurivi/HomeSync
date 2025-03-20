@@ -1,7 +1,6 @@
 package com.example.homesync;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,9 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FirebaseRealtimeDatabase {
 
@@ -36,30 +33,117 @@ public class FirebaseRealtimeDatabase {
         });
     }
 
-    public static void readUser(final FirebaseCallbackUser callback) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    public static List<User> readUsers(Context context, final UsersCallback callback) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<HashMap<String, Object>> users = new ArrayList<>();
+                List<User> usersList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    HashMap<String, Object> user = (HashMap<String, Object>) snapshot.getValue();
-                    users.add(user);
+                    User user = snapshot.getValue(User.class);
+                    usersList.add(user);
                 }
-                callback.onCallback(users);  // Devuelve el valor usando el callback
+                callback.onSuccess(usersList);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Failed to read value.", error.toException());
-                callback.onCallback(null);  // En caso de error, devuelve null
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Error al leer los datos", Toast.LENGTH_SHORT).show();
+                callback.onFailure(databaseError.toException());
+            }
+        });
+        return null;
+    }
+
+    public static void getUserById(String id, Context context, final UserCallback callback) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    callback.onSuccess(user);
+                } else {
+                    Toast.makeText(context, "Usuario no encontrado", Toast.LENGTH_SHORT).show();
+                    callback.onFailure(new Exception("Usuario no encontrado"));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Error al leer los datos", Toast.LENGTH_SHORT).show();
+                callback.onFailure(databaseError.toException());
             }
         });
     }
 
-    public interface FirebaseCallbackUser {
-        void onCallback(List<HashMap<String, Object>> value);
+    public static void updateUserImage(String userId, String newImageUrl, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico de la URL de la imagen
+        mDatabase.child("users").child(userId).child("image").setValue(newImageUrl)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Imagen de usuario actualizada", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error al actualizar la imagen", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    public static void updateUserGroupCode(String userId, String groupCode, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico del codigo del grupo
+        mDatabase.child("users").child(userId).child("groupCode").setValue(groupCode)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            if(groupCode.equals("")){
+                                Toast.makeText(MainActivity.activityA, "Grupo abandonado", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.activityA, "Unido a un grupo", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if(groupCode.equals("")){
+                                Toast.makeText(MainActivity.activityA, "Error al abandonar el grupo", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.activityA, "Error al unirte al grupo", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+    }
+
+    public static void updateUserNickname(String userId, String newNickname, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico del nickname del usuario
+        mDatabase.child("users").child(userId).child("nickname").setValue(newNickname)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Apodo actualizado", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error al actualizar el apodo", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
+    public interface UsersCallback {
+        void onSuccess(List<User> users);
+        void onFailure(Exception e);
+    }
+
+    public interface UserCallback {
+        void onSuccess(User user);
+        void onFailure(Exception e);
     }
 }

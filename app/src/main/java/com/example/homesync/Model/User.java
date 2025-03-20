@@ -13,6 +13,7 @@ public class User {
     private int monthlyPoints;
     private String groupCode;
     private String image;
+    private boolean administrator;
 
 
 
@@ -31,6 +32,7 @@ public class User {
         this.monthlyPoints = monthlyPoints;
         this.groupCode = groupCode;
         this.image = image;
+        this.administrator = false;
     }
 
     public User(String id, String name, String nickname, String mail) {
@@ -44,6 +46,7 @@ public class User {
         this.monthlyPoints = 0;
         this.groupCode = "";
         this.image = "https://res.cloudinary.com/dlclglmr6/image/upload/v1739489498/usuario_xftkhf.png";
+        this.administrator = false;
     }
 
     public User(String id, String name, String nickname, String mail, String password) {
@@ -57,6 +60,7 @@ public class User {
         this.monthlyPoints = 0;
         this.groupCode = "";
         this.image = "https://res.cloudinary.com/dlclglmr6/image/upload/v1739489498/usuario_xftkhf.png";
+        this.administrator = false;
     }
 
 
@@ -142,6 +146,14 @@ public class User {
         this.image = image;
     }
 
+    public boolean isAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
+    }
+
 
 
     // METODOS
@@ -150,5 +162,6 @@ public class User {
         this.weeklyPoints = 0;
         this.monthlyPoints = 0;
         this.groupCode = "";
+        this.administrator = false;
     }
 }

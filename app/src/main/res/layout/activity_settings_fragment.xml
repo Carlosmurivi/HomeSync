@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!-- Imagen de Perfil -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageProfile"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="65dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundImageView"
+        app:strokeColor="@color/black"
+        app:strokeWidth="4dp"
+        android:padding="4dp"
+        android:clickable="true"
+        android:scaleType="fitCenter"/>
+
+
+    <!-- Cambiar Apodo -->
+    <ImageButton
+        android:id="@+id/changeNickname"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp"
+        android:scaleType="centerCrop"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/editar"
+        app:layout_constraintTop_toBottomOf="@id/imageProfile"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Apodo -->
+    <TextView
+        android:id="@+id/nicknameUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apodo"
+        android:textSize="@dimen/h2"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        android:textColor="@color/texts"
+        app:layout_constraintTop_toBottomOf="@id/imageProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Correo -->
+    <TextView
+        android:id="@+id/mailUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Correo"
+        android:textSize="@dimen/h3"
+        android:textStyle="bold"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/texts"
+        app:layout_constraintTop_toBottomOf="@id/nicknameUser"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Cambiar Contraseña -->
+    <Button
+        android:id="@+id/changePassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cambiar Contraseña"
+        android:textSize="@dimen/button"
+        android:layout_marginLeft="@dimen/button"
+        android:layout_marginRight="@dimen/button"
+        android:layout_marginTop="160dp"
+        android:backgroundTint="@color/buttons"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/mailUser"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Abandonar el grupo -->
+    <Button
+        android:id="@+id/leaveGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Abandonar Grupo"
+        android:textSize="@dimen/button"
+        android:layout_margin="@dimen/button"
+        android:backgroundTint="@color/buttons"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/changePassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Cerrar Sesión -->
+    <Button
+        android:id="@+id/logOut"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cerrar Sesión"
+        android:textSize="@dimen/button"
+        android:layout_margin="@dimen/button"
+        android:backgroundTint="@color/buttons"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/leaveGroup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+
+
+
+
+
+    <!-- No existe grupo -->
+    <TextView
+        android:id="@+id/createGroupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No existe ningún grupo"
+        android:textAlignment="center"
+        android:textSize="@dimen/title2"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="220dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/createGroupButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Crear Grupo"
+        android:textSize="@dimen/button"
+        android:layout_marginTop="100dp"
+        android:layout_marginHorizontal="65dp"
+        app:layout_constraintTop_toBottomOf="@id/createGroupTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
