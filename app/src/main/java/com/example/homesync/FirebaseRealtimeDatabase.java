@@ -1,10 +1,12 @@
 package com.example.homesync;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.homesync.Model.Group;
 import com.example.homesync.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -94,7 +96,7 @@ public class FirebaseRealtimeDatabase {
                 });
     }
 
-    public static void updateUserGroupCode(String userId, String groupCode, Context context) {
+    public static void updateUserGroupCode(String userId, String groupCode, boolean creator, Context context) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Referencia al campo específico del codigo del grupo
@@ -104,9 +106,16 @@ public class FirebaseRealtimeDatabase {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             if(groupCode.equals("")){
+                                mDatabase.child("users").child(userId).child("administrator").setValue(false);
                                 Toast.makeText(MainActivity.activityA, "Grupo abandonado", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(MainActivity.activityA, "Unido a un grupo", Toast.LENGTH_SHORT).show();
+                                if(creator){
+                                    mDatabase.child("users").child(userId).child("administrator").setValue(creator);
+                                    Toast.makeText(MainActivity.activityA, "Grupo creado", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    mDatabase.child("users").child(userId).child("administrator").setValue(false);
+                                    Toast.makeText(MainActivity.activityA, "Unido a un grupo", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } else {
                             if(groupCode.equals("")){
@@ -117,6 +126,40 @@ public class FirebaseRealtimeDatabase {
                         }
                     }
                 });
+    }
+
+    public static void checkGroupExists(String groupCode, Context context, OnGroupCheckListener listener) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.child("groups").child(groupCode).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    listener.onGroupExists(true); // El grupo existe
+                } else {
+                    listener.onGroupExists(false); // El grupo no existe
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Error al verificar el grupo", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void saveGroup(Group group, Context context){
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("groups").child(group.getCode()).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.e("FirebaseRealtime", "Grupo creado y guardado en groups");
+                } else {
+                    Toast.makeText(context, "Error al registrar el grupo", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public static void updateUserNickname(String userId, String newNickname, Context context) {
@@ -145,5 +188,9 @@ public class FirebaseRealtimeDatabase {
     public interface UserCallback {
         void onSuccess(User user);
         void onFailure(Exception e);
+    }
+
+    public interface OnGroupCheckListener {
+        void onGroupExists(boolean exists);
     }
 }

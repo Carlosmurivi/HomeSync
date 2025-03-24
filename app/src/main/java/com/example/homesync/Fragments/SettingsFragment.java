@@ -84,15 +84,17 @@ public class SettingsFragment extends Fragment {
         Button logOut = view.findViewById(R.id.logOut);
 
 
-        TextView createGroupTextView = view.findViewById(R.id.createGroupTextView);
-        Button createGroupButton = view.findViewById(R.id.createGroupButton);
 
         FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
             @Override
             public void onSuccess(User user) {
-                if(!user.getGroupCode().trim().equals("")) {
-                    createGroupButton.setVisibility(View.VISIBLE);
-                    createGroupTextView.setVisibility(View.VISIBLE);
+                if(user.getGroupCode().trim().equals("")) {
+                    imageProfile.setVisibility(View.VISIBLE);
+                    nicknameUser.setVisibility(View.VISIBLE);
+                    mailUser.setVisibility(View.VISIBLE);
+                    changePassword.setVisibility(View.VISIBLE);
+                    changeNickname.setVisibility(View.VISIBLE);
+                    logOut.setVisibility(View.VISIBLE);
                 } else {
                     imageProfile.setVisibility(View.VISIBLE);
                     nicknameUser.setVisibility(View.VISIBLE);
@@ -101,16 +103,15 @@ public class SettingsFragment extends Fragment {
                     changePassword.setVisibility(View.VISIBLE);
                     leaveGroup.setVisibility(View.VISIBLE);
                     logOut.setVisibility(View.VISIBLE);
-
-                    Glide.with(SettingsFragment.this)
-                            .load(user.getImage())
-                            .skipMemoryCache(true) // Evita la caché en RAM
-                            .diskCacheStrategy(DiskCacheStrategy.NONE) // Evita la caché en disco
-                            .into(imageProfile);
-                    Glide.with(SettingsFragment.this).load(user.getImage()).into(imageProfile);
-                    nicknameUser.setText(user.getNickname());
-                    mailUser.setText("@" + user.getMail());
                 }
+                Glide.with(SettingsFragment.this)
+                        .load(user.getImage())
+                        .skipMemoryCache(true) // Evita la caché en RAM
+                        .diskCacheStrategy(DiskCacheStrategy.NONE) // Evita la caché en disco
+                        .into(imageProfile);
+                Glide.with(SettingsFragment.this).load(user.getImage()).into(imageProfile);
+                nicknameUser.setText(user.getNickname());
+                mailUser.setText("@" + user.getMail());
             }
             @Override
             public void onFailure(Exception e) {
@@ -271,7 +272,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void leaveGroup(){
-        FirebaseRealtimeDatabase.updateUserGroupCode(mAuth.getCurrentUser().getUid(), "", MainActivity.activityA);
+        FirebaseRealtimeDatabase.updateUserGroupCode(mAuth.getCurrentUser().getUid(), "", false, MainActivity.activityA);
         MainActivity.activityA.recreate();
     }
 
