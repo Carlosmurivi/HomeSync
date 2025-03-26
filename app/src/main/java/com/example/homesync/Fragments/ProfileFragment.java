@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.homesync.Dialogs.DialogJoinGroup;
 import com.example.homesync.FirebaseRealtimeDatabase;
 import com.example.homesync.Index;
 import com.example.homesync.MainActivity;
@@ -88,6 +89,7 @@ public class ProfileFragment extends Fragment {
 
         createGroupButton.setOnClickListener(v -> createGroup());
 
+        joinGroupButton.setOnClickListener(v -> joinGroup());
 
 
 
@@ -163,5 +165,10 @@ public class ProfileFragment extends Fragment {
 
         // Mostrar el diálogo
         builder.create().show();
+    }
+
+    private void joinGroup(){
+        DialogJoinGroup dialog = DialogJoinGroup.newInstance("Introduce el código", "Código del grupo", "Código incorrecto");
+        dialog.show(getActivity().getSupportFragmentManager(), "DialogJoinGroup");
     }
 }

@@ -75,12 +75,12 @@ public class DialogChangePassword extends DialogFragment {
         TextView dialogMessage = view.findViewById(R.id.dialogMessage);
         TextInputEditText editText = view.findViewById(R.id.editText);
         TextInputLayout textLayout = view.findViewById(R.id.textLayout);
-        TextInputEditText passwordEditText = view.findViewById(R.id.passwordEditText);
-        TextInputLayout passwordTextLayout = view.findViewById(R.id.passwordLayout);
+        //TextInputEditText passwordEditText = view.findViewById(R.id.passwordEditText);
+        //TextInputLayout passwordTextLayout = view.findViewById(R.id.passwordLayout);
         Button buttonOk = view.findViewById(R.id.buttonOk);
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
-        Button passwordButtonOk = view.findViewById(R.id.passwordButtonOk);
-        Button passwordButtonCancel = view.findViewById(R.id.passwordButtonCancel);
+        //Button passwordButtonOk = view.findViewById(R.id.passwordButtonOk);
+        //Button passwordButtonCancel = view.findViewById(R.id.passwordButtonCancel);
 
         // Recuperar los valores pasados como argumentos
         String message1 = getArguments() != null ? getArguments().getString(ARG_MESSAGE1) : "Mensaje por defecto";
@@ -104,12 +104,12 @@ public class DialogChangePassword extends DialogFragment {
                 textLayout.setError("El código es incorrecto");
             } else {
                 dialogMessage.setText(message2);
-                passwordTextLayout.setHint(element2); // Usamos "elemento" como hint (placeholder)
+                //passwordTextLayout.setHint(element2); // Usamos "elemento" como hint (placeholder)
 
-                passwordTextLayout.setVisibility(View.VISIBLE);
-                passwordEditText.setVisibility(View.VISIBLE);
-                passwordButtonOk.setVisibility(View.VISIBLE);
-                passwordButtonCancel.setVisibility(View.VISIBLE);
+                //passwordTextLayout.setVisibility(View.VISIBLE);
+                //passwordEditText.setVisibility(View.VISIBLE);
+                //passwordButtonOk.setVisibility(View.VISIBLE);
+                //passwordButtonCancel.setVisibility(View.VISIBLE);
 
                 editText.setVisibility(View.GONE);
                 textLayout.setVisibility(View.GONE);
@@ -134,9 +134,9 @@ public class DialogChangePassword extends DialogFragment {
             }
         });
 
-        passwordButtonCancel.setOnClickListener(v -> dismiss());
+        //passwordButtonCancel.setOnClickListener(v -> dismiss());
 
-        passwordButtonOk.setOnClickListener(v -> {
+        /*passwordButtonOk.setOnClickListener(v -> {
             String password = passwordEditText.getText().toString();
 
             if (mAuth.getCurrentUser() != null) {
@@ -154,7 +154,7 @@ public class DialogChangePassword extends DialogFragment {
             } else {
                 Toast.makeText(getContext(), "Usuario no autenticado", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         // Crear el diálogo
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireActivity());

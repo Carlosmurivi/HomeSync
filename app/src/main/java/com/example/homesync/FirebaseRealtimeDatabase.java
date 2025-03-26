@@ -148,6 +148,24 @@ public class FirebaseRealtimeDatabase {
         });
     }
 
+    public static void addUserToGroup(String userId, String groupCode, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Referencia al campo específico del nickname del usuario
+        mDatabase.child("users").child(userId).child("groupCode").setValue(groupCode);
+        mDatabase.child("groups").child(groupCode).child("userIdList").child(userId).setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Se accedió a un grupo", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error al acceder al grupo", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     public static void saveGroup(Group group, Context context){
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("groups").child(group.getCode()).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {

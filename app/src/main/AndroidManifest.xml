@@ -22,7 +22,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Prueba"
+            android:name=".Index"
             android:exported="false" />
         <activity
             android:name=".Fragments.SettingsFragment"
@@ -40,7 +40,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Index"
+            android:name=".Prueba"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
