@@ -272,8 +272,16 @@ public class SettingsFragment extends Fragment {
     }
 
     private void leaveGroup(){
-        FirebaseRealtimeDatabase.updateUserGroupCode(mAuth.getCurrentUser().getUid(), "", false, MainActivity.activityA);
-        MainActivity.activityA.recreate();
+        FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                FirebaseRealtimeDatabase.removeUserFromGroup(mAuth.getCurrentUser().getUid(), user.getGroupCode(), MainActivity.activityA);
+                MainActivity.activityA.recreate();
+            }
+            @Override
+            public void onFailure(Exception e) {
+            }
+        });
     }
 
     public static FirebaseAuth getmAuth() {

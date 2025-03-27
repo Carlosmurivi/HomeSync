@@ -144,10 +144,11 @@ public class ProfileFragment extends Fragment {
                     });
                 } while (flag[0]);
 
-                FirebaseRealtimeDatabase.updateUserGroupCode(mAuth.getUid(), code.toString(), true, MainActivity.activityA);
+                /*FirebaseRealtimeDatabase.updateUserGroupCode(mAuth.getUid(), code.toString(), true, MainActivity.activityA);
                 List<String> userIdList = new ArrayList<>();
                 userIdList.add(mAuth.getCurrentUser().getUid());
-                FirebaseRealtimeDatabase.saveGroup(new Group(code.toString(), userIdList), MainActivity.activityA);
+                FirebaseRealtimeDatabase.saveGroup(new Group(code.toString(), userIdList), MainActivity.activityA);*/
+                FirebaseRealtimeDatabase.addUserToGroup(mAuth.getUid(), code.toString(), true, MainActivity.activityA);
 
                 Toast.makeText(getContext(), "Grupo creado", Toast.LENGTH_SHORT).show();
                 MainActivity.activityA.recreate();

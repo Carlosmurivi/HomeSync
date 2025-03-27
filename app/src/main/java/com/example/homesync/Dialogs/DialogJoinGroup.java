@@ -88,7 +88,7 @@ public class DialogJoinGroup extends DialogFragment {
             @Override
             public void onGroupExists(boolean exists) {
                 if(exists){
-                    FirebaseRealtimeDatabase.addUserToGroup(userId, code, MainActivity.activityA);
+                    FirebaseRealtimeDatabase.addUserToGroup(userId, code, false, MainActivity.activityA);
                     MainActivity.activityA.recreate();
                     dismiss();
                 } else {
