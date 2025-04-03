@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar foto"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@color/buttons"
+        android:gravity="center"
+        android:paddingBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnDefaultImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Imagen predeterminada"
+        android:background="@color/buttonColor"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/user_picture"/>
+
+    <Button
+        android:id="@+id/btnGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Imagen de galería"
+        android:background="@color/buttonColor"
+        android:textColor="@android:color/white"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/gallery_picture"/>
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        android:background="@color/buttonColor"
+        android:textColor="@android:color/white"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

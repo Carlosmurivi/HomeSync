@@ -3,6 +3,7 @@ package com.example.homesync.Fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -58,6 +59,7 @@ import javax.mail.internet.MimeMessage;
 
 public class SettingsFragment extends Fragment {
 
+    private static final String DEFAULT_PROFILE_PICTURE = "https://res.cloudinary.com/dlclglmr6/image/upload/v1739489498/usuario_xftkhf.png";
     private static final int PICK_IMAGE_REQUEST = 1;
     private String urlFoto;
     private Uri selectedImageUri;
@@ -155,8 +157,35 @@ public class SettingsFragment extends Fragment {
     }
 
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        // Crear el diálogo
+        Dialog dialog = new Dialog(MainActivity.activityA);
+        dialog.setContentView(R.layout.activity_dialog_change_picture);
+        dialog.setCancelable(true);
+
+        // Referencias a los botones
+        Button btnDefaultImage = dialog.findViewById(R.id.btnDefaultImage);
+        Button btnGallery = dialog.findViewById(R.id.btnGallery);
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        // Acción para usar imagen predeterminada
+        btnDefaultImage.setOnClickListener(v -> {
+            FirebaseRealtimeDatabase.updateUserImage(mAuth.getUid(), DEFAULT_PROFILE_PICTURE, MainActivity.activityA);
+            MainActivity.activityA.recreate();
+            dialog.dismiss();
+        });
+
+        // Acción para abrir la galería
+        btnGallery.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            dialog.dismiss();
+        });
+
+        // Acción para cancelar
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        // Mostrar el diálogo
+        dialog.show();
     }
 
     @Override
@@ -272,16 +301,38 @@ public class SettingsFragment extends Fragment {
     }
 
     private void leaveGroup(){
-        FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.activityA, R.style.CustomAlertDialog);
+        builder.setTitle("Abandonar grupo");
+        builder.setMessage("¿Quieres abandonar el grupo?");
+
+        // Botón Confirmar
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
             @Override
-            public void onSuccess(User user) {
-                FirebaseRealtimeDatabase.removeUserFromGroup(mAuth.getCurrentUser().getUid(), user.getGroupCode(), MainActivity.activityA);
-                MainActivity.activityA.recreate();
-            }
-            @Override
-            public void onFailure(Exception e) {
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        FirebaseRealtimeDatabase.removeUserFromGroup(mAuth.getCurrentUser().getUid(), user.getGroupCode(), MainActivity.activityA);
+                        MainActivity.activityA.recreate();
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
             }
         });
+
+        // Botón Cancelar
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.activityA, "Acción cancelada", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar el diálogo
+        builder.create().show();
     }
 
     public static FirebaseAuth getmAuth() {
