@@ -6,6 +6,7 @@ public class Task {
     private int id;
     private String description;
     private int points;
+    private String userId;
     private boolean predetermined;
 
 
@@ -14,10 +15,18 @@ public class Task {
     public Task() {
     }
 
-    public Task(int id, String description, int points, boolean predetermined) {
+    public Task(int id, String description, int points, String userId, boolean predetermined) {
         this.id = id;
         this.description = description;
         this.points = points;
+        this.userId = userId;
+        this.predetermined = predetermined;
+    }
+
+    public Task(String description, int points, String userId, boolean predetermined) {
+        this.description = description;
+        this.points = points;
+        this.userId = userId;
         this.predetermined = predetermined;
     }
 
@@ -48,6 +57,14 @@ public class Task {
         this.points = points;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public boolean isPredetermined() {
         return predetermined;
     }
@@ -67,9 +84,10 @@ public class Task {
         this.predetermined = false;
     }
 
-    public void editTask(String description, int points, boolean predetermined){
+    public void editTask(String description, int points, String userId, boolean predetermined){
         this.description = description;
         this.points = points;
+        this.userId = userId;
         this.predetermined = predetermined;
     }
 }

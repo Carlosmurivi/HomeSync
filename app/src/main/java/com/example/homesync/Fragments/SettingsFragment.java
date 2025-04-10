@@ -125,13 +125,16 @@ public class SettingsFragment extends Fragment {
 
 
         // Cambiar Imagen de Perfil
-        imageProfile.setOnClickListener(v -> openGallery());
+        imageProfile.setOnClickListener(v -> {
+            openGallery();
+        });
 
 
         // Cambiar Apodo
         changeNickname.setOnClickListener(v -> {
             DialogEditNickname dialog = DialogEditNickname.newInstance("Introduce tu apodo", "Nuevo apodo");
             dialog.show(getActivity().getSupportFragmentManager(), "DialogEditNickname");
+            MainActivity.activityA.recreate();
         });
 
 
@@ -238,6 +241,7 @@ public class SettingsFragment extends Fragment {
                 @Override
                 public void onSuccess(User user) {
                     FirebaseRealtimeDatabase.updateUserImage(user.getId(), urlFoto, MainActivity.activityA);
+                    MainActivity.activityA.recreate();
                 }
                 @Override
                 public void onFailure(Exception e) {
