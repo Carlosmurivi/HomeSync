@@ -200,30 +200,17 @@ public class SettingsFragment extends Fragment {
             // Aquí puedes usar la URI para lo que necesites, por ejemplo, mostrar la imagen en un ImageView
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), selectedImageUri);
-                Bitmap croppedBitmap = cropToSquare(bitmap);
+                Bitmap croppedBitmap = CloudinaryDataBase.cropToSquare(bitmap);
                 imageProfile.setImageBitmap(croppedBitmap);
                 imagenAñadida = true;
-                new SubirImagenTask().execute(getImageUri(MainActivity.activityA, croppedBitmap));
+                new uploadTaskImage().execute(CloudinaryDataBase.getImageUri(MainActivity.activityA, croppedBitmap));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    // Para recortar la imagen y que tenga una forma cuadrada
-    private Bitmap cropToSquare(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int newWidth = Math.min(width, height);
-        int newHeight = Math.min(width, height);
-
-        int cropW = (width - newWidth) / 2;
-        int cropH = (height - newHeight) / 2;
-
-        return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
-    }
-
-    private class SubirImagenTask extends AsyncTask<Uri, Void, String> {
+    private class uploadTaskImage extends AsyncTask<Uri, Void, String> {
         @Override
         protected String doInBackground(Uri... uris) {
             return CloudinaryDataBase.SaveImage(uris[0], MainActivity.activityA);
@@ -248,23 +235,6 @@ public class SettingsFragment extends Fragment {
                 }
             });
         }
-    }
-
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        File imageFile = new File(context.getCacheDir(), "images");
-        Uri imageUri = null;
-        try {
-            imageFile.mkdirs(); // make sure the directory exists
-            File file = new File(imageFile, "image_" + System.currentTimeMillis() + ".png");
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            imageUri = Uri.fromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return imageUri;
     }
 
     private void dialogChangePassword() {

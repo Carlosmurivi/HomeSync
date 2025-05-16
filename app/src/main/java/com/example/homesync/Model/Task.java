@@ -7,6 +7,7 @@ public class Task {
     private String description;
     private int points;
     private String userId;
+    private String imageUrl;
     private boolean predetermined;
 
 
@@ -20,6 +21,22 @@ public class Task {
         this.description = description;
         this.points = points;
         this.userId = userId;
+        this.predetermined = predetermined;
+    }
+
+    public Task(int id, String description, int points, String userId, String imageUrl, boolean predetermined) {
+        this.id = id;
+        this.description = description;
+        this.points = points;
+        this.userId = userId;
+        this.imageUrl = imageUrl;
+        this.predetermined = predetermined;
+    }
+
+    public Task(int id, String description, int points, boolean predetermined) {
+        this.id = id;
+        this.description = description;
+        this.points = points;
         this.predetermined = predetermined;
     }
 
@@ -72,6 +89,16 @@ public class Task {
     public void setPredetermined(boolean predetermined) {
         this.predetermined = predetermined;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+
 
 
 

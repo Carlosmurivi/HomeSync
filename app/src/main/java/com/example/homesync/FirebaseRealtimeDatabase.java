@@ -193,8 +193,13 @@ public class FirebaseRealtimeDatabase {
         tasksRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                Log.d("DEBUG", "snapshot exists: " + snapshot.exists());
+                Log.d("DEBUG", "children count: " + snapshot.getChildrenCount());
+
                 List<Task> taskList = new ArrayList<>();
                 for (DataSnapshot taskSnapshot : snapshot.getChildren()) {
+                    Log.d("DEBUG", "taskSnapshot: " + taskSnapshot);
+
                     Task task = taskSnapshot.getValue(Task.class);
                     if (task != null) {
                         taskList.add(task);
@@ -261,6 +266,18 @@ public class FirebaseRealtimeDatabase {
                     @Override
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
                         Toast.makeText(context, "Se creó la tarea", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public static void completeTask(Task task, String groupCode, Context context) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.child("groups").child(groupCode).child("taskCompleteList").push().setValue(task)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        Toast.makeText(context, "Se completó la tarea", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

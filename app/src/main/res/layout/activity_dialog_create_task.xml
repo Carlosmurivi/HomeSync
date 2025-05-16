@@ -8,18 +8,6 @@
     android:padding="20dp"
     android:background="@color/background">
 
-    <!-- Título -->
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrar Tarea"
-        android:textAlignment="center"
-        android:textSize="@dimen/title"
-        android:textColor="@color/texts"
-        android:textStyle="bold"
-        android:layout_marginTop="10sp"/>
-
     <!-- Nombre de la tarea -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameTaskLayout"
@@ -30,7 +18,7 @@
         app:layout_constraintTop_toBottomOf="@id/textView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nameTaskEditText"
@@ -71,14 +59,14 @@
         android:thumbTint="@color/buttons"
         android:trackTint="@color/switch_track_color" />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <!--<com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageTask"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginTop="50dp"
         android:clickable="true"
         android:scaleType="fitCenter"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars" />-->
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
