@@ -1,16 +1,18 @@
 package com.example.homesync.Fragments;
 
-import static android.app.Activity.RESULT_OK;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Icon;
+import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,41 +32,39 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
 import com.example.homesync.CloudinaryDataBase;
-import com.example.homesync.Dialogs.DialogJoinGroup;
 import com.example.homesync.FirebaseRealtimeDatabase;
-import com.example.homesync.Index;
 import com.example.homesync.MainActivity;
 import com.example.homesync.Model.Group;
 import com.example.homesync.Model.Task;
 import com.example.homesync.Model.User;
-import com.example.homesync.Prueba;
 import com.example.homesync.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 
-import java.security.SecureRandom;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final SecureRandom RANDOM = new SecureRandom();
+    private static String[] topCompletedTaskTable = {"Usuario", "Descripción", "Puntos", "Fecha", "false", "imagen"};
+    private Uri photoUri;
+    private File photoFile;
+    private View view;
 
 
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
     private ImageView btnInsertImage;
     private Bitmap imageBitmap;
     private ActivityResultLauncher<Intent> cameraLauncher;
@@ -82,83 +83,129 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null && data.getExtras() != null) {
-                            imageBitmap = (Bitmap) data.getExtras().get("data");
+                        if (photoUri != null) {
+                            try {
+                                // 1. Cargar el bitmap original desde el archivo
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), photoUri);
 
-                            // Buscar la imagen del diálogo y mostrar la foto
-                            if (btnInsertImage != null && imageBitmap != null) {
-                                btnInsertImage.setImageBitmap(imageBitmap);
+                                // 2. Leer orientación EXIF
+                                ExifInterface exif = new ExifInterface(photoFile.getAbsolutePath());
+                                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                                int rotationDegrees = 0;
+
+                                switch (orientation) {
+                                    case ExifInterface.ORIENTATION_ROTATE_90:
+                                        rotationDegrees = 90;
+                                        break;
+                                    case ExifInterface.ORIENTATION_ROTATE_180:
+                                        rotationDegrees = 180;
+                                        break;
+                                    case ExifInterface.ORIENTATION_ROTATE_270:
+                                        rotationDegrees = 270;
+                                        break;
+                                }
+
+                                // 3. Rotar el bitmap si es necesario
+                                Matrix matrix = new Matrix();
+                                matrix.postRotate(rotationDegrees);
+                                imageBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+                                if (btnInsertImage != null) {
+                                    btnInsertImage.setImageBitmap(CloudinaryDataBase.cropToSquare(imageBitmap));
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getContext(), "Error al cargar imagen rotada", Toast.LENGTH_SHORT).show();
                             }
+
                         }
                     }
-                });
-    }
+                }
+        );
 
+    }
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_profile_fragment, container, false);
+        view = inflater.inflate(R.layout.activity_profile_fragment, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        String id = mAuth.getCurrentUser().getUid();
 
         ImageView image = view.findViewById(R.id.imageView);
-        TextView titulo = view.findViewById(R.id.textView);
+        TextView nickName = view.findViewById(R.id.textViewNicknameUser);
+        TextView points = view.findViewById(R.id.textViewPoints);
+        ImageView imageGoldMedal = view.findViewById(R.id.imageGoldMedal);
+        TextView goldMedal = view.findViewById(R.id.goldMedal);
+        ImageView imageSilverMedal = view.findViewById(R.id.imageSilverMedal);
+        TextView silverMedal = view.findViewById(R.id.silverMedal);
+        ImageView imageBronzeMedal = view.findViewById(R.id.imageBronzeMedal);
+        TextView bronzeMedal = view.findViewById(R.id.bronzeMedal);
+        TextView textViewCompletedTasksUserTable = view.findViewById(R.id.textViewCompletedTasksUserTable);
+        TableLayout tableLayout = view.findViewById(R.id.tableLayoutCompletedTaskUser);
         TextView aviso = view.findViewById(R.id.createGroupTextView);
         Button createGroupButton = view.findViewById(R.id.createGroupButton);
         Button joinGroupButton = view.findViewById(R.id.joinGroupButton);
         FloatingActionButton fab = view.findViewById(R.id.fab);
 
 
-        FirebaseRealtimeDatabase.getUserById(mAuth.getCurrentUser().getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
+        FirebaseRealtimeDatabase.getUserById(mAuth.getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
             @Override
             public void onSuccess(User user) {
-                if(user.getGroupCode().trim().equals("")) {
+                if (user.getGroupCode().trim().equals("")) {
                     createGroupButton.setVisibility(View.VISIBLE);
                     joinGroupButton.setVisibility(View.VISIBLE);
                     aviso.setVisibility(View.VISIBLE);
+
+                    createGroupButton.setOnClickListener(v -> Group.createGroup(user.getId(), MainActivity.activityA));
+                    joinGroupButton.setOnClickListener(v -> Group.joinGroup(MainActivity.activityA));
                 } else {
-                    titulo.setVisibility(View.VISIBLE);
                     image.setVisibility(View.VISIBLE);
+                    nickName.setVisibility(View.VISIBLE);
+                    points.setVisibility(View.VISIBLE);
+                    imageGoldMedal.setVisibility(View.VISIBLE);
+                    goldMedal.setVisibility(View.VISIBLE);
+                    imageSilverMedal.setVisibility(View.VISIBLE);
+                    silverMedal.setVisibility(View.VISIBLE);
+                    imageBronzeMedal.setVisibility(View.VISIBLE);
+                    bronzeMedal.setVisibility(View.VISIBLE);
+                    textViewCompletedTasksUserTable.setVisibility(View.VISIBLE);
+                    tableLayout.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.VISIBLE);
 
                     if (isAdded() && getActivity() != null) {
                         Glide.with(requireContext()).load(user.getImage()).into(image);
                     }
-                    titulo.setText(user.getNickname());
+
+                    // Configuración del click listener del FAB
+                    fab.setOnClickListener(v -> completeTask());
+                    nickName.setText(user.getNickname());
+                    points.setText(Integer.toString(user.getPoints()));
+                    goldMedal.setText(Integer.toString(user.getGoldMedals()));
+                    silverMedal.setText(Integer.toString(user.getSilverMedals()));
+                    bronzeMedal.setText(Integer.toString(user.getBronzeMedals()));
+
+                    Task.generateCompletedTasksUserTable(tableLayout, user.getId(), MainActivity.activityA);
                 }
             }
+
             @Override
             public void onFailure(Exception e) {
                 Log.e("Error", "Error al generar los elementos");
                 Toast.makeText(getContext(), "Error al generar los elementos", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        createGroupButton.setOnClickListener(v -> createGroup());
-
-        joinGroupButton.setOnClickListener(v -> joinGroup());
-
-
-
-
-
-
-        // Configuración del click listener del FAB
-        fab.setOnClickListener(v -> completeTask());
-
-
         return view;
     }
 
-    /*
-     * Método para completar una tarea.
-     * */
-    private void completeTask(){
+
+    /**
+     * Completa una tarea
+     */
+    @SuppressLint("NewApi")
+    private void completeTask() {
         // Crear el diálogo
         Dialog dialog = new Dialog(MainActivity.activityA);
         dialog.setContentView(R.layout.activity_dialog_complete_task);
@@ -167,6 +214,7 @@ public class ProfileFragment extends Fragment {
         // Referencias a los botones
         Spinner spinnerTask = dialog.findViewById(R.id.spinnerTask);
         btnInsertImage = dialog.findViewById(R.id.imageTask);
+        btnInsertImage.setImageResource(R.drawable.fondo_x);
         Button btnCompleteTask = dialog.findViewById(R.id.completeButton);
         Button btnCancel = dialog.findViewById(R.id.backButton);
 
@@ -177,23 +225,39 @@ public class ProfileFragment extends Fragment {
 
         // Acción para añadir la fotografia
         btnInsertImage.setOnClickListener(v1 -> {
-            // Se abre la camara y se hace una foto.
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                cameraLauncher.launch(intent);
+                try {
+                    photoFile = createImageFile();
+                    if (photoFile != null) {
+                        photoUri = FileProvider.getUriForFile(
+                                requireContext(),
+                                requireContext().getPackageName() + ".fileprovider",
+                                photoFile
+                        );
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                        cameraLauncher.launch(intent);
+                        Toast.makeText(getContext(), "Abriendo cámara...", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(getContext(), "No se pudo crear el archivo", Toast.LENGTH_SHORT).show();
+                }
             }
-            Toast.makeText(getContext(), "Abriendo cámara...", Toast.LENGTH_SHORT).show();
         });
+
 
         // Acción para crear la tarea
         btnCompleteTask.setOnClickListener(v1 -> {
             // Se recogen todos los datos, se comprueba que todo este completo, y se crea una nueva tarea
-            if(spinnerTask.getSelectedItem().toString() != null && !spinnerTask.getSelectedItem().toString().equals("Selecciona una tarea")){
+            if (spinnerTask.getSelectedItem().toString() != null && !spinnerTask.getSelectedItem().toString().equals("Selecciona una tarea")) {
 
                 for (Task t : allTask) {
-                    if(t.getDescription().equals(spinnerTask.getSelectedItem().toString())) {
+                    if (t.getDescription().equals(spinnerTask.getSelectedItem().toString())) {
                         task = t;
                         task.setUserId(mAuth.getUid());
+                        LocalDateTime now = LocalDateTime.now();
+                        task.setDateTime(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                         break;
                     }
                 }
@@ -214,160 +278,20 @@ public class ProfileFragment extends Fragment {
         dialog.show();
     }
 
-    /*
-    * Método para crear una tarea.
-    * */
-    private void createTask(){
-        // Crear el diálogo
-        Dialog dialog = new Dialog(MainActivity.activityA);
-        dialog.setContentView(R.layout.activity_dialog_create_task);
-        dialog.setCancelable(true);
 
-        // Referencias a los botones
-        TextInputLayout nameTaskLayout = dialog.findViewById(R.id.nameTaskLayout);
-        TextInputEditText nameTaskEditText = dialog.findViewById(R.id.nameTaskEditText);
-        TextInputLayout pointsLayout = dialog.findViewById(R.id.pointsLayout);
-        TextInputEditText pointsEditText = dialog.findViewById(R.id.pointsEditText);
-        Switch predeterminedSwitch = dialog.findViewById(R.id.predeterminedSwitch);
-        //btnInsertImage = dialog.findViewById(R.id.imageTask);
-        Button btnCreateTask = dialog.findViewById(R.id.createButton);
-        Button btnCancel = dialog.findViewById(R.id.backButton);
-
-        // Acción para añadir la fotografia
-        /*btnInsertImage.setOnClickListener(v1 -> {
-            // Se abre la camara y se hace una foto.
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                cameraLauncher.launch(intent);
-            }
-            Toast.makeText(getContext(), "Abriendo cámara...", Toast.LENGTH_SHORT).show();
-        });*/
-
-        // Acción para crear la tarea
-        btnCreateTask.setOnClickListener(v1 -> {
-            // Se recogen todos los datos, se comprueba que todo este completo, y se crea una nueva tarea
-            if(nameTaskEditText.getText().toString().trim() != null && !nameTaskEditText.getText().toString().trim().equals("") && pointsEditText.getText().toString() != null && !pointsEditText.getText().toString().equals("")){
-                generateUniqueIdAndCreateTask(nameTaskEditText.getText().toString(), Integer.parseInt(pointsEditText.getText().toString()), predeterminedSwitch.isChecked());
-                dialog.dismiss();
-            } else {
-                Toast.makeText(getContext(), "Se deben completar todos los campos", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Acción para cancelar
-        btnCancel.setOnClickListener(v1 -> dialog.dismiss());
-
-        // Mostrar el diálogo
-        dialog.show();
-    }
-
-    /*
-    * Esta función genera un id para la tarea y la crea.
-    * */
-    private void generateUniqueIdAndCreateTask(String nameTask, int points, boolean predetermined){
-        Random random = new Random();
-        int id = random.nextInt(1000000); // Genera un número entre 0 y 999999
-
-        FirebaseRealtimeDatabase.getUserById(mAuth.getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
-            @Override
-            public void onSuccess(User user) {
-                FirebaseRealtimeDatabase.checkTaskExists(user.getGroupCode(), Integer.toString(id), MainActivity.activityA, new FirebaseRealtimeDatabase.OnTaskCheckListener() {
-                    @Override
-                    public void onTaskExists(boolean exists) {
-                        if(exists) {
-                            generateUniqueIdAndCreateTask(nameTask, points, predetermined);
-                        } else {
-                            Task task = new Task(id, nameTask, points, predetermined);
-                            FirebaseRealtimeDatabase.getUserById(mAuth.getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback(){
-                                @Override
-                                public void onSuccess(User user) {
-                                    FirebaseRealtimeDatabase.addTaskToGroup(task, user.getGroupCode(), MainActivity.activityA);
-                                }
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Toast.makeText(getContext(), "Error durante el proceso", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getContext(), "Error durante el proceso", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /*
-    * Esta función muestra el dialog para crear un grupo.
-    * */
-    private void createGroup(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.activityA, R.style.CustomAlertDialog);
-        builder.setTitle("Confirmación");
-        builder.setMessage("¿Quieres crear un grupo?");
-
-        // Botón Confirmar
-        builder.setPositiveButton("Crear", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                generateUniqueCodeAndCreateGroup();
-            }
-        });
-
-        // Botón Cancelar
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.activityA, "Acción cancelada", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
-
-        // Mostrar el diálogo
-        builder.create().show();
-    }
-
-    /*
-    * Esta función genera un id para el grupo y lo crea.
-    * */
-    private void generateUniqueCodeAndCreateGroup(){
-        StringBuilder code = new StringBuilder(6);
-
-        for (int i = 0; i < 6; i++) {
-            int index = RANDOM.nextInt(CHARACTERS.length());
-            code.append(CHARACTERS.charAt(index));
-        }
-
-        String finalCode = code.toString();
-
-        FirebaseRealtimeDatabase.checkGroupExists(finalCode, MainActivity.activityA, new FirebaseRealtimeDatabase.OnGroupCheckListener() {
-            @Override
-            public void onGroupExists(boolean exists) {
-                if (!exists) {
-                    // El grupo no existe: se puede crear
-                    FirebaseRealtimeDatabase.addUserToGroup(mAuth.getUid(), finalCode, true, MainActivity.activityA);
-                    Toast.makeText(MainActivity.activityA, "Grupo creado", Toast.LENGTH_SHORT).show();
-                    MainActivity.activityA.recreate();
-                } else {
-                    // El grupo ya existe: volver a intentar con un nuevo código
-                    generateUniqueCodeAndCreateGroup(); // Llamada recursiva
-                }
-            }
-        });
-    }
-
-    /*
-     * Esta funcion se encarga de cargar todas las tareas en el spinner para poder seleccionarla al completar una de ellas.
-     * */
-    private void getTasks(Dialog dialog){
+    /**
+     * Se encarga de cargar todas las tareas en el spinner para poder seleccionarla al completar una de ellas.
+     *
+     * @param dialog
+     */
+    private void getTasks(Dialog dialog) {
         Spinner spinnerTask = dialog.findViewById(R.id.spinnerTask);
         FirebaseRealtimeDatabase.getUserById(mAuth.getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
             @Override
             public void onSuccess(User user) {
                 FirebaseRealtimeDatabase.getTasksByGroupId(user.getGroupCode(), new FirebaseRealtimeDatabase.TasksCallback() {
                     @Override
-                    public void onTasksLoaded(List<Task> tasks) {
+                    public ArrayList<String[]> onTasksLoaded(List<Task> tasks) {
                         allTask = tasks;
                         // Se limpia el array y se le añade el valor predeterminado.
                         tasksList = new ArrayList<>();
@@ -381,13 +305,16 @@ public class ProfileFragment extends Fragment {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.activityA, R.layout.spinner_item, tasksList);
                         adapter.setDropDownViewResource(R.layout.spinner_item);
                         spinnerTask.setAdapter(adapter);
+                        return null;
                     }
+
                     @Override
                     public void onError(DatabaseError error) {
                         Toast.makeText(MainActivity.activityA, "Error al obtener las tareas", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
+
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(MainActivity.activityA, "Error al obtener el Usuario", Toast.LENGTH_SHORT).show();
@@ -395,19 +322,21 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    /*
-    * Esta función guarda la imagen y la añade su url a la tarea.
-    * También almacena la tarea en la base de datos.
-    * */
+
+    /**
+     * Guarda la imagen y la añade su url a la tarea.
+     * También almacena la tarea en la base de datos.
+     */
     private class uploadCompleteTask extends AsyncTask<Uri, Void, String> {
         @Override
         protected String doInBackground(Uri... uris) {
             return CloudinaryDataBase.SaveImage(uris[0], MainActivity.activityA);
         }
+
         @Override
         protected void onPostExecute(String url) {
             // Aquí puedes manejar la URL de la imagen subida
-            urlFoto =  url;
+            urlFoto = url;
 
             if (urlFoto.startsWith("http://")) {
                 urlFoto = urlFoto.replace("http://", "https://");
@@ -419,8 +348,9 @@ public class ProfileFragment extends Fragment {
             FirebaseRealtimeDatabase.getUserById(mAuth.getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
                 @Override
                 public void onSuccess(User user) {
-                    FirebaseRealtimeDatabase.completeTask(task, user.getGroupCode(), MainActivity.activityA);
+                    FirebaseRealtimeDatabase.completeTask(mAuth.getUid(), task, user.getGroupCode(), MainActivity.activityA);
                 }
+
                 @Override
                 public void onFailure(Exception e) {
                     Toast.makeText(MainActivity.activityA, "Error al obtener el Usuario", Toast.LENGTH_SHORT).show();
@@ -429,11 +359,196 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    /*
-    * Esta función muestra el dialog para acceder a un grupo
-    * */
-    private void joinGroup(){
-        DialogJoinGroup dialog = DialogJoinGroup.newInstance("Introduce el código", "Código del grupo", "Código incorrecto");
-        dialog.show(getActivity().getSupportFragmentManager(), "DialogJoinGroup");
+
+    /**
+     * Crea una imagen temporal para poder almacenarla con buena calidad.
+     *
+     * @return
+     * @throws IOException
+     */
+    private File createImageFile() throws IOException {
+        String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Genera una tabla y la completa con los datos.
+     */
+    private void generateCompletedTaskTable() {
+        TableLayout tableLayout = view.findViewById(R.id.tableLayout);
+
+        ArrayList<String[]> datos = new ArrayList<>();
+        datos.add(topCompletedTaskTable);
+
+        completeCompletedTaskTable(datos);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // Limpia la tabla antes de añadir filas nuevas
+            tableLayout.removeAllViews();
+            tableLayout.setPadding(8, 8, 8, 8);
+
+            boolean firstRow = true;
+            for (String[] row : datos) {
+                TableRow fila = new TableRow(MainActivity.activityA);
+
+                for (int j = 0; j < (row.length) - 2; j++) {
+                    TextView celda = new TextView(MainActivity.activityA);
+                    celda.setText(row[j]);
+                    celda.setPadding(16, 16, 16, 16);
+                    celda.setTextSize(16);
+
+                    // Comprobamos si es una tarea predeterminada para cambiarle el color del texto
+                    if (row[(row.length) - 2].equals("true")) {
+                        celda.setTextColor(ContextCompat.getColor(MainActivity.activityA, R.color.darkBlue));
+                    } else {
+                        celda.setTextColor(ContextCompat.getColor(MainActivity.activityA, R.color.texts));
+                    }
+
+                    celda.setBackgroundColor(ContextCompat.getColor(MainActivity.activityA, R.color.background));
+
+                    // Establecer márgenes entre celdas
+                    TableRow.LayoutParams params = new TableRow.LayoutParams(
+                            TableRow.LayoutParams.WRAP_CONTENT,
+                            TableRow.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(4, 4, 4, 4); // izquierda, arriba, derecha, abajo
+                    celda.setLayoutParams(params);
+
+                    if (firstRow) { // Primera fila = encabezado
+                        celda.setTextColor(ContextCompat.getColor(MainActivity.activityA, R.color.black));
+                        celda.setBackgroundColor(ContextCompat.getColor(MainActivity.activityA, R.color.colorPrimary));
+                        celda.setTypeface(null, Typeface.BOLD);
+                    } else {
+                        // Listener solo para las celdas que no son de encabezado
+                        celda.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                displayImageDialog(row[(row.length)-1]);
+                                //Toast.makeText(MainActivity.activityA, row[(row.length)-2], Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    fila.addView(celda);
+                }
+
+                firstRow = false;
+                tableLayout.addView(fila);
+            }
+        }, 1500); // 1000 milisegundos = 1 segundo
+    }
+
+
+    /**
+     * Este metodo rellena la tabla con datos, mostrando un ranking con el puesto, nombre y puntos totales.
+     *
+     * @param datos
+     * @return Lista de registros para imprimir en la tabla.
+     */
+    private ArrayList<String[]> completeCompletedTaskTable(ArrayList<String[]> datos) {
+        FirebaseRealtimeDatabase.getUserById(mAuth.getUid(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                FirebaseRealtimeDatabase.getCompletedTasksByGroupId(user.getGroupCode(), new FirebaseRealtimeDatabase.TasksCallback() {
+                    @Override
+                    public ArrayList<String[]> onTasksLoaded(List<Task> tasks) {
+                        for (Task t : tasks) {
+                            FirebaseRealtimeDatabase.getUserById(t.getUserId(), MainActivity.activityA, new FirebaseRealtimeDatabase.UserCallback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    String[] task = {user.getNickname(), t.getDescription(), Integer.toString(t.getPoints()), t.getDateTime(), Boolean.toString(t.isPredetermined()), t.getImageUrl()};
+                                    datos.add(task);
+                                }
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(MainActivity.activityA, "Error al obtener el Usuario", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        return datos;
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Toast.makeText(MainActivity.activityA, "Error al obtener las tareas", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(MainActivity.activityA, "Error al obtener el Usuario", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return datos;
+    }
+
+
+    /**
+     * Genera un Dialog mostrando la imagen que se le pase como url por parámetros.
+     * @param imageUrl
+     */
+    private void displayImageDialog(String imageUrl) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View view = inflater.inflate(R.layout.activity_dialog_imagen, null);
+
+        ImageView imageView = view.findViewById(R.id.imageView);
+
+        // Cargar imagen desde la URL usando Glide
+        Glide.with(getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.fondo_x) // Opcional: imagen mientras carga
+                //.error(R.drawable.error_image)       // Opcional: imagen si falla
+                .into(imageView);
+
+        builder.setView(view);
+        builder.setCancelable(true);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+
+
+
+
+
+
+
+    // Ordenar correctamente los elementos de ProfileFragment
+
+    // Mandarlo al git
+
+    // Cuando una tarea no predeterminada se complete se elimina
+
+
+
+
+
+    // Que cada mes o semana se reseteen los puntos y que se entreguen medallas de oro, plata y bronce
+
+
+    
+
+
+    // Crear la lista de la compra
+
+    // Incorporar unas tareas predeterminadas al grupo (Pasar aspiradora, Limpiar los baños, Recoger la habitación, Tender la ropa, Recoger lavavajillas, Hacer la compra)
 }

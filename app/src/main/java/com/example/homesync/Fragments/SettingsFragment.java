@@ -2,9 +2,7 @@ package com.example.homesync.Fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,31 +29,16 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.homesync.CloudinaryDataBase;
-import com.example.homesync.Dialogs.DialogChangePassword;
 import com.example.homesync.Dialogs.DialogEditNickname;
 import com.example.homesync.FirebaseRealtimeDatabase;
 import com.example.homesync.Index;
-import com.example.homesync.Login;
 import com.example.homesync.MainActivity;
 import com.example.homesync.Model.User;
-import com.example.homesync.Prueba;
 import com.example.homesync.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 public class SettingsFragment extends Fragment {
 
@@ -113,7 +96,7 @@ public class SettingsFragment extends Fragment {
                         .into(imageProfile);
                 Glide.with(SettingsFragment.this).load(user.getImage()).into(imageProfile);
                 nicknameUser.setText(user.getNickname());
-                mailUser.setText("@" + user.getMail());
+                mailUser.setText(user.getMail());
             }
             @Override
             public void onFailure(Exception e) {

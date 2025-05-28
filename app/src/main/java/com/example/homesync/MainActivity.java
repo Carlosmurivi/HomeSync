@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleCoroutineScope;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.homesync.Fragments.GroupFragment;
 import com.example.homesync.Fragments.ProfileFragment;
 import com.example.homesync.Fragments.SettingsFragment;
 import com.example.homesync.Fragments.ViewPagerAdapter;
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ProfileFragment(), R.drawable.productos_de_limpieza__6_);
+        adapter.addFragment(new ProfileFragment(), R.drawable.user_picture);
+        adapter.addFragment(new GroupFragment(), R.drawable.productos_de_limpieza__6_);
         adapter.addFragment(new SettingsFragment(), R.drawable.baseline_settings_24);
 
 

@@ -6,7 +6,7 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,148 +14,74 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- Imagen de Perfil -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:padding="4dp"
-                android:visibility="gone"
-                app:shapeAppearanceOverlay="@style/RoundImageView"
-                app:strokeColor="@color/black"
-                app:strokeWidth="4dp" />
-
-            <!-- Título -->
-            <TextView
-                android:id="@+id/textViewNicknameUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="15dp"
-                android:text="Apodo"
-                android:textAlignment="center"
-                android:textColor="@color/texts"
-                android:textSize="40dp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <!-- Puntos -->
-            <TextView
-                android:id="@+id/textViewPoints"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:textAlignment="center"
-                android:textColor="@color/darkBlue"
-                android:textSize="@dimen/h2"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <!-- Medallas de Oro -->
-                    <ImageView
-                        android:id="@+id/imageGoldMedal"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="3dp"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/medalla_de_oro" />
+                <!-- Título del código -->
+                <TextView
+                    android:id="@+id/textViewCodeTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="5dp"
+                    android:text="Código:"
+                    android:textColor="@color/texts"
+                    android:textSize="@dimen/h1"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/goldMedal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="0"
-                        android:textColor="@color/gold"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-                </LinearLayout>
+                <!-- Título -->
+                <TextView
+                    android:id="@+id/textViewCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="25dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="30dp">
-                    <!-- Medallas de Plata -->
-                    <ImageView
-                        android:id="@+id/imageSilverMedal"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="3dp"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/medalla_de_plata" />
-
-                    <TextView
-                        android:id="@+id/silverMedal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="0"
-                        android:textColor="@color/silver"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <!-- Medallas de Bronce -->
-                    <ImageView
-                        android:id="@+id/imageBronzeMedal"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="3dp"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/medalla_de_bronce" />
-
-                    <TextView
-                        android:id="@+id/bronzeMedal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="0"
-                        android:textColor="@color/bronze"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-                </LinearLayout>
+                <!-- Boton de copiar el código del grupo -->
+                <ImageButton
+                    android:id="@+id/imageButtonCopyCode"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/copiar" />
             </LinearLayout>
 
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Título de la tabla -->
+                <!-- Título de la tabla Ranking -->
                 <TextView
-                    android:id="@+id/textViewCompletedTasksUserTable"
+                    android:id="@+id/textViewRankingTable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="80dp"
-                    android:text="TAREAS COMPLETADAS"
+                    android:layout_marginTop="30dp"
+                    android:text="RANKING"
                     android:textAlignment="center"
                     android:textColor="@color/texts"
                     android:textSize="@dimen/h2"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- Tabla de Ranking -->
                 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -173,7 +99,92 @@
                             android:padding="16dp">
 
                             <TableLayout
-                                android:id="@+id/tableLayoutCompletedTaskUser"
+                                android:id="@+id/tableLayoutRanking"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/black"
+                                android:padding="4dp"
+                                android:stretchColumns="*"
+                                android:visibility="gone">
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="2dp"
+                                        android:background="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:text="Puesto"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="2dp"
+                                        android:background="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:text="Nombre"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="2dp"
+                                        android:background="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:text="Puntos"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+                                </TableRow>
+                            </TableLayout>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </ScrollView>
+
+                <!-- Título de la tabla Tareas -->
+                <TextView
+                    android:id="@+id/textViewTasksTable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:text="TAREAS"
+                    android:textAlignment="center"
+                    android:textColor="@color/texts"
+                    android:textSize="@dimen/h2"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Tabla de Tareas -->
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TableLayout
+                                android:id="@+id/tableLayoutTasks"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/black"
@@ -206,20 +217,9 @@
                                         android:textColor="@color/black"
                                         android:textSize="16dp"
                                         android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_margin="2dp"
-                                        android:background="@color/colorPrimary"
-                                        android:padding="8dp"
-                                        android:text="Fecha"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16dp"
-                                        android:textStyle="bold" />
                                 </TableRow>
                             </TableLayout>
+
                         </LinearLayout>
                     </HorizontalScrollView>
                 </ScrollView>
@@ -230,15 +230,14 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:orientation="vertical">
                 <!-- No existe grupo -->
                 <TextView
-                    android:id="@+id/createGroupTextView"
+                    android:id="@+id/textViewCreateGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_standard"
-                    android:layout_marginTop="220dp"
+                    android:layout_marginTop="150dp"
                     android:layout_marginRight="@dimen/margin_standard"
                     android:text="No existe ningún grupo"
                     android:textAlignment="center"
@@ -248,7 +247,7 @@
                     android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/createGroupButton"
+                    android:id="@+id/buttonCreateGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/button"
@@ -261,7 +260,7 @@
                     android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/joinGroupButton"
+                    android:id="@+id/buttonJoinGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/button"
@@ -273,9 +272,9 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
+    <!-- Fab para crear tareas -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabCreateTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -285,4 +284,3 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="#181818" />
 </RelativeLayout>
-
