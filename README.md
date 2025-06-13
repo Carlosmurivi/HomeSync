@@ -56,7 +56,7 @@ git clone https://github.com/Carlosmurivi/HomeSync.git
 ## ✒️ Anexo
 
 Consulta la documentación del proyecto para obtener más información:
-[📄 Descargar manual en PDF](./docs/Documentación del TFC - HomeSync - Carlos Murillo Villegas.pdf)
+[📄 Descargar manual en PDF](./docs/Documentación%20del%20TFC%20-%20HomeSync%20-%20Carlos%20Murillo%20Villegas.pdf)
 
 Consulta el manual de usuario con capturas y pasos explicados:
-[📄 Descargar manual en PDF](./docs/Manual de usuario - HomeSync - Carlos Murillo Villegas.pdf)
+[📄 Descargar manual en PDF](./docs/Manual%20de%20usuario%20-%20HomeSync%20-%20Carlos%20Murillo%20Villegas.pdf)
