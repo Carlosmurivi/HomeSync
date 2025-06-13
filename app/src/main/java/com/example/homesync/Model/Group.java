@@ -4,15 +4,31 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.homesync.Dialogs.DialogJoinGroup;
 import com.example.homesync.FirebaseRealtimeDatabase;
+import com.example.homesync.Fragments.SettingsFragment;
 import com.example.homesync.MainActivity;
 import com.example.homesync.R;
+import com.google.android.material.chip.Chip;
+import com.google.firebase.database.DatabaseError;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -25,7 +41,7 @@ public class Group {
     private String code;
     private List<String> userIdList;
     private List<Task> taskList;
-    private List<Product> shoppingList;
+    private List<PurchaseProduct> shoppingList;
 
 
 
@@ -33,7 +49,7 @@ public class Group {
     public Group() {
     }
 
-    public Group(String code, List<String> userIdList, List<Task> taskList, List<Product> shoppingList) {
+    public Group(String code, List<String> userIdList, List<Task> taskList, List<PurchaseProduct> shoppingList) {
         this.code = code;
         this.userIdList = userIdList;
         this.taskList = taskList;
@@ -74,11 +90,11 @@ public class Group {
         this.taskList = taskList;
     }
 
-    public List<Product> getShoppingList() {
+    public List<PurchaseProduct> getShoppingList() {
         return shoppingList;
     }
 
-    public void setShoppingList(List<Product> shoppingList) {
+    public void setShoppingList(List<PurchaseProduct> shoppingList) {
         this.shoppingList = shoppingList;
     }
 
@@ -92,15 +108,24 @@ public class Group {
      * @param context
      */
     public static void createGroup(String idUser, Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.activity_dialog_create_group, null);
+
+        RadioButton radioButtonMonthly = dialogView.findViewById(R.id.radioButtonMonthly);
+        RadioButton radioButtonWeekly = dialogView.findViewById(R.id.radioButtonWeekly);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.activityA, R.style.CustomAlertDialog);
-        builder.setTitle("Confirmación");
-        builder.setMessage("¿Quieres crear un grupo?");
+        builder.setView(dialogView);
 
         // Botón Confirmar
         builder.setPositiveButton("Crear", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                generateUniqueCodeAndCreateGroup(idUser, context);
+                if (radioButtonMonthly.isChecked()) {
+                    generateUniqueCodeAndCreateGroup(idUser, "monthly", context);
+                } else if (radioButtonWeekly.isChecked()) {
+                    generateUniqueCodeAndCreateGroup(idUser, "weekly", context);
+                }
             }
         });
 
@@ -122,7 +147,7 @@ public class Group {
      * @param idUser
      * @param context
      */
-    private static void generateUniqueCodeAndCreateGroup(String idUser, Context context) {
+    private static void generateUniqueCodeAndCreateGroup(String idUser, String lastReset, Context context) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         SecureRandom RANDOM = new SecureRandom();
 
@@ -140,7 +165,7 @@ public class Group {
             public void onGroupExists(boolean exists) {
                 if (!exists) {
                     // El grupo no existe: se puede crear
-                    FirebaseRealtimeDatabase.addUserToGroup(idUser, finalCode, true, context);
+                    FirebaseRealtimeDatabase.addUserToGroup(idUser, finalCode, true, lastReset, context);
                     Toast.makeText(context, "Grupo creado", Toast.LENGTH_SHORT).show();
                     if (context instanceof Activity) {
                         Activity activity = (Activity) context;
@@ -152,7 +177,7 @@ public class Group {
                     }
                 } else {
                     // El grupo ya existe: volver a intentar con un nuevo código
-                    generateUniqueCodeAndCreateGroup(idUser, context); // Llamada recursiva
+                    generateUniqueCodeAndCreateGroup(idUser, lastReset, context); // Llamada recursiva
                 }
             }
         });

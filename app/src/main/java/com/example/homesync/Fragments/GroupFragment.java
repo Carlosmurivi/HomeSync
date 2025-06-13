@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,9 @@ public class GroupFragment extends Fragment {
         view = inflater.inflate(R.layout.activity_group_fragment, container, false);
         mAuth = FirebaseAuth.getInstance();
 
+        TextView textViewTitle = view.findViewById(R.id.textViewTitle);
+        View separatingLine = view.findViewById(R.id.separatingLine);
+        LinearLayout linearLayoutGroupFragment = view.findViewById(R.id.linearLayoutGroupFragment);
         TextView textViewCodeTitle = view.findViewById(R.id.textViewCodeTitle);
         TextView textViewCode = view.findViewById(R.id.textViewCode);
         ImageButton imageButtonCopyCode = view.findViewById(R.id.imageButtonCopyCode);
@@ -54,6 +58,7 @@ public class GroupFragment extends Fragment {
             @Override
             public void onSuccess(User user) {
                 if (user.getGroupCode().trim().equals("")) {
+                    linearLayoutGroupFragment.setVisibility(View.GONE);
                     textViewCreateGroup.setVisibility(View.VISIBLE);
                     buttonCreateGroup.setVisibility(View.VISIBLE);
                     buttonJoinGroup.setVisibility(View.VISIBLE);
@@ -62,6 +67,8 @@ public class GroupFragment extends Fragment {
                     buttonCreateGroup.setOnClickListener(v -> Group.createGroup(user.getId(), MainActivity.activityA));
                     buttonJoinGroup.setOnClickListener(v -> Group.joinGroup(MainActivity.activityA));
                 } else {
+                    textViewTitle.setVisibility(View.VISIBLE);
+                    separatingLine.setVisibility(View.VISIBLE);
                     textViewCodeTitle.setVisibility(View.VISIBLE);
                     textViewCode.setVisibility(View.VISIBLE);
                     imageButtonCopyCode.setVisibility(View.VISIBLE);

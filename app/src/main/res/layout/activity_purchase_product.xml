@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:paddingStart="8dp">
+
+        <TextView
+            android:id="@+id/itemTitle"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Título"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/h3"
+            android:textColor="@color/texts"
+            android:visibility="gone"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/favoriteTrueImageButton"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/favorito_true"/>
+
+    <ImageButton
+        android:id="@+id/favoriteImageButton"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/favorito_false"/>
+
+    <ImageButton
+        android:id="@+id/deleteImageButton"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/basura"/>
+</LinearLayout>

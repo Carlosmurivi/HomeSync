@@ -1,7 +1,10 @@
 package com.example.homesync.Model;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,14 +22,22 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.homesync.FirebaseRealtimeDatabase;
 import com.example.homesync.R;
 import com.example.homesync.UserDetails;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseError;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class Task {
@@ -155,9 +166,6 @@ public class Task {
         completeRankingTable(datos, user.getId(), context);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            // Limpia la tabla antes de añadir filas nuevas
-            //tableLayout.removeAllViews();
-
             tableLayout.setPadding(8, 8, 8, 8);
 
             for (String[] row : datos) {
@@ -291,7 +299,6 @@ public class Task {
         }, 1500); // 1000 milisegundos = 1 segundo
     }
 
-
     /**
      * Devuelve los registros de una tabla que muestra todas las tareas disponibles para realizar con los campos Descripción y Puntos.
      * @param datos
@@ -347,8 +354,6 @@ public class Task {
         completeCompletedTasksUserTable(datos, idUser, context);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            boolean firstRow = true;
-
             int length = datos.size();
 
             // Solo se muestran hasta los 20 últimos registros
@@ -396,7 +401,6 @@ public class Task {
                     fila.addView(celda);
                 }
 
-                firstRow = false;
                 tableLayout.addView(fila);
             }
         }, 1500); // 1000 milisegundos = 1 segundo
@@ -446,6 +450,189 @@ public class Task {
 
 
     /**
+     * Genera una tabla con las últimas 25 tareas completadas.
+     * @param userId
+     * @param tableLayout
+     * @param context
+     */
+    public static void generateCompletedTaskTable(String userId, User user, TableLayout tableLayout, Context context) {
+        ArrayList<String[]> datos = new ArrayList<>();
+        completeCompletedTaskTable(userId, datos, context);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            sortByDate(datos);
+            investArrayList(datos);
+            int length = datos.size();
+
+            // Solo se muestran hasta los 25 últimos registros
+            if (length > 25) {
+                length = 25;
+            }
+
+            for (int i = 0; i < length; i++) {
+                String[] row = datos.get(i);
+                TableRow fila = new TableRow(context);
+
+                for (int j = 0; j < (row.length) - 4; j++) {
+                    if (j==0) {
+                        ImageView celda = new ImageView(context);
+
+                        int sizeInPx = dpToPx(context, 32);
+                        TableRow.LayoutParams params = new TableRow.LayoutParams(sizeInPx, sizeInPx);
+
+                        // Cargar imagen circular
+                        RequestOptions options = new RequestOptions()
+                                .circleCrop()
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE);
+
+                        Glide.with(context)
+                                .load(row[j])
+                                .apply(options)
+                                .into(celda);
+
+                        celda.setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+
+                        params.setMargins(4, 4, 4, 4); // izquierda, arriba, derecha, abajo
+                        celda.setLayoutParams(params);
+
+                        // Listener solo para las celdas que no son de encabezado
+                        celda.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, UserDetails.class);
+                                intent.putExtra("idUser", row[(row.length)-2]);
+                                intent.putExtra("administrator", user.isAdministrator());
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        fila.addView(celda);
+                    } else {
+                        TextView celda = new TextView(context);
+                        celda.setText(row[j]);
+                        celda.setPadding(16, 16, 16, 16);
+                        celda.setTextSize(16);
+
+                        // Comprobamos si es una tarea predeterminada para cambiarle el color del texto
+                        if (row[(row.length) - 3].equals("true")) {
+                            celda.setTextColor(ContextCompat.getColor(context, R.color.darkBlue));
+                        } else {
+                            celda.setTextColor(ContextCompat.getColor(context, R.color.texts));
+                        }
+
+                        celda.setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+
+                        // Establecer márgenes entre celdas
+                        TableRow.LayoutParams params = new TableRow.LayoutParams(
+                                TableRow.LayoutParams.WRAP_CONTENT,
+                                TableRow.LayoutParams.WRAP_CONTENT
+                        );
+                        params.setMargins(4, 4, 4, 4); // izquierda, arriba, derecha, abajo
+                        celda.setLayoutParams(params);
+
+                        // Listener solo para las celdas que no son de encabezado
+                        celda.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                displayImageDialogTasks(row[(row.length)-6], user.isAdministrator(), user.getGroupCode(), row[(row.length)-3], row[(row.length)-2], row[(row.length)-1], context);
+                            }
+                        });
+
+                        fila.addView(celda);
+                    }
+                }
+
+                tableLayout.addView(fila);
+            }
+        }, 1500); // 1000 milisegundos = 1 segundo
+    }
+
+    /**
+     * Rellena la tabla con las últimas 25 tareas completadas, con los campos usuario, descripción, puntos y fecha.
+     * @param userId
+     * @param datos
+     * @param context
+     * @return
+     */
+    private static ArrayList<String[]> completeCompletedTaskTable(String userId, ArrayList<String[]> datos, Context context) {
+        FirebaseRealtimeDatabase.getUserById(userId, context, new FirebaseRealtimeDatabase.UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                FirebaseRealtimeDatabase.getCompletedTasksByGroupId(user.getGroupCode(), new FirebaseRealtimeDatabase.TasksCallback() {
+                    @Override
+                    public ArrayList<String[]> onTasksLoaded(List<Task> tasks) {
+                        for (Task t : tasks) {
+                            FirebaseRealtimeDatabase.getUserById(t.getUserId(), context, new FirebaseRealtimeDatabase.UserCallback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    String[] task = {user.getImage(), t.getDescription(), Integer.toString(t.getPoints()), t.getDateTime(), Boolean.toString(t.isPredetermined()), t.getImageUrl(), user.getId(), t.getDateTime()};
+                                    datos.add(task);
+                                }
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(context, "Error al obtener el Usuario", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        return datos;
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {
+                        Toast.makeText(context, "Error al obtener las tareas", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(context, "Error al obtener el Usuario", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return datos;
+    }
+
+    /**
+     * Ordena los registros de un ArrayList<String[]> por el campo fecha situado en la posicion lenght -4.
+     * @param datos
+     */
+    public static void sortByDate(ArrayList<String[]> datos) {
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+        Collections.sort(datos, new Comparator<String[]>() {
+            @Override
+            public int compare(String[] o1, String[] o2) {
+                try {
+                    Date fecha1 = formatoFecha.parse(o1[o1.length - 4]);
+                    Date fecha2 = formatoFecha.parse(o2[o2.length - 4]);
+                    return fecha1.compareTo(fecha2); // ascendente (usa fecha2.compareTo(fecha1) para descendente)
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
+    }
+
+    /**
+     * Convierte los dp a píxeles.
+     * @param context
+     * @param dp
+     * @return
+     */
+    public static int dpToPx(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+
+
+
+
+    /**
      * Obtiene únicamente el valor fecha de un DataTime
      * @param fechaCompleta
      * @return
@@ -475,19 +662,71 @@ public class Task {
      * Genera un Dialog mostrando la imagen que se le pase como url por parámetros.
      * @param imageUrl
      */
+    private static void displayImageDialogTasks(String points, boolean administrator, String groupCode, String imageUrl, String userId, String taskId, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.activity_dialog_image, null);
+
+        ImageView imageView = view.findViewById(R.id.imageView);
+        Button btnEliminar = view.findViewById(R.id.btnEliminarr);
+
+        if (administrator) {
+            btnEliminar.setVisibility(View.VISIBLE);
+        } else {
+            btnEliminar.setVisibility(View.GONE);
+        }
+
+        // Cargar imagen con Glide
+        Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.fondo_x)
+                .into(imageView);
+
+        builder.setView(view);
+        builder.setCancelable(true);
+
+        AlertDialog dialog = builder.create();
+
+        btnEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseRealtimeDatabase.removeCompleteTask(groupCode, taskId, userId, points, context);
+                dialog.dismiss();  // <-- Cierra el diálogo aquí
+
+                if (context instanceof Activity) {
+                    ((Activity) context).recreate();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+
+    /**
+     * Genera un Dialog mostrando la imagen que se le pase como url por parámetros.
+     * @param imageUrl
+     */
     private static void displayImageDialog(String imageUrl, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.activity_dialog_imagen, null);
+        View view = inflater.inflate(R.layout.activity_dialog_image, null);
 
         ImageView imageView = view.findViewById(R.id.imageView);
+        Button btnEliminar = view.findViewById(R.id.btnEliminarr);
 
-        // Cargar imagen desde la URL usando Glide
+        // Cargar imagen con Glide
         Glide.with(context)
                 .load(imageUrl)
-                .placeholder(R.drawable.fondo_x) // Opcional: imagen mientras carga
-                //.error(R.drawable.error_image)       // Opcional: imagen si falla
+                .placeholder(R.drawable.fondo_x)
                 .into(imageView);
+
+        // Listener del botón "Eliminar"
+        btnEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
         builder.setView(view);
         builder.setCancelable(true);
@@ -495,6 +734,8 @@ public class Task {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
 
     /**
      * Ordena las tareas poniendo al principio las tareas con valor "predeterminado" = true.

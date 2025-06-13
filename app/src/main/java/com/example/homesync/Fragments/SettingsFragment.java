@@ -62,6 +62,8 @@ public class SettingsFragment extends Fragment {
 
         imageProfile = view.findViewById(R.id.imageProfile);
         nicknameUser = view.findViewById(R.id.nicknameUser);
+        TextView textViewTitle = view.findViewById(R.id.textViewTitle);
+        View separatingLine = view.findViewById(R.id.separatingLine);
         TextView mailUser = view.findViewById(R.id.mailUser);
         ImageButton changeNickname = view.findViewById(R.id.changeNickname);
         Button changePassword = view.findViewById(R.id.changePassword);
@@ -81,6 +83,8 @@ public class SettingsFragment extends Fragment {
                     changeNickname.setVisibility(View.VISIBLE);
                     logOut.setVisibility(View.VISIBLE);
                 } else {
+                    textViewTitle.setVisibility(View.VISIBLE);
+                    separatingLine.setVisibility(View.VISIBLE);
                     imageProfile.setVisibility(View.VISIBLE);
                     nicknameUser.setVisibility(View.VISIBLE);
                     mailUser.setVisibility(View.VISIBLE);
