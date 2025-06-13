@@ -1,6 +1,6 @@
 # 🏠 HomeSync
 
-**HomeSync** es una aplicación móvil desarrollada en Java con Android Studio, diseñada para facilitar la organización del hogar entre varios miembros. Permite asignar tareas, registrar su finalización mediante fotos y otorgar puntos y medallas como sistema de gamificación. También incluye una lista de la compra compartida y autenticación de usuarios con Firebase.
+**HomeSync** es una aplicación móvil desarrollada en Java con Android Studio, diseñada para facilitar la organización del hogar entre varios miembros. Permite asignar tareas, registrar su finalización mediante fotos y otorgar puntos y medallas como sistema de gamificación. También incluye una lista de la compra compartida y autenticación de usuarios con Firebase. Este proyecto ha sido desarrollado como Trabajo de Fin de Ciclo del Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM) por Carlos Murillo Villegas.
 
 ---
 
@@ -50,3 +50,13 @@ necesarios para su correcto funcionamiento. Acéptalos para continuar.
 
 ```bash
 git clone https://github.com/Carlosmurivi/HomeSync.git
+```
+---
+
+## ✒️ Anexo
+
+Consulta la documentación del proyecto para obtener más información:
+[📄 Descargar manual en PDF](./docs/Documentación del TFC - HomeSync - Carlos Murillo Villegas.pdf)
+
+Consulta el manual de usuario con capturas y pasos explicados:
+[📄 Descargar manual en PDF](./docs/Manual de usuario - HomeSync - Carlos Murillo Villegas.pdf)
