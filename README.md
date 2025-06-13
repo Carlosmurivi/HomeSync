@@ -49,4 +49,4 @@ necesarios para su correcto funcionamiento. Acéptalos para continuar.
 ### 🔽 Clonar el repositorio
 
 ```bash
-git clone https://github.com/carlosmurillo/HomeSync.git
+git clone https://github.com/Carlosmurivi/HomeSync.git
