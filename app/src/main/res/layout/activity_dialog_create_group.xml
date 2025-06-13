@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewTitle"
+        android:text="¿Cada cuanto se comprobarán los puntos?"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/texts"
+        android:textAlignment="center"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        app:singleSelection="true"
+        app:selectionRequired="true" >
+
+        <RadioButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/radioButtonMonthly"
+            android:textColor="@color/texts"
+            android:textSize="18sp"
+            android:checked="true"
+            android:text="Mensualmente"/>
+
+        <RadioButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/radioButtonWeekly"
+            android:textColor="@color/texts"
+            android:textSize="18sp"
+            android:text="Semanalmente"/>
+    </RadioGroup>
+
+</LinearLayout>

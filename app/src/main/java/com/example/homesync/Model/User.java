@@ -1,5 +1,15 @@
 package com.example.homesync.Model;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.example.homesync.FirebaseRealtimeDatabase;
+import com.example.homesync.R;
+
 public class User {
 
     // ATRIBUTOS
@@ -9,6 +19,9 @@ public class User {
     private String mail;
     private String password;
     private int points;
+    private int goldMedals;
+    private int silverMedals;
+    private int bronzeMedals;
     private int weeklyPoints;
     private int monthlyPoints;
     private String groupCode;
@@ -42,6 +55,9 @@ public class User {
         this.mail = mail;
         this.password = "";
         this.points = 0;
+        this.goldMedals = 0;
+        this.silverMedals = 0;
+        this.bronzeMedals = 0;
         this.weeklyPoints = 0;
         this.monthlyPoints = 0;
         this.groupCode = "";
@@ -154,14 +170,132 @@ public class User {
         this.administrator = administrator;
     }
 
+    public int getGoldMedals() {
+        return goldMedals;
+    }
+
+    public void setGoldMedals(int goldMedals) {
+        this.goldMedals = goldMedals;
+    }
+
+    public int getSilverMedals() {
+        return silverMedals;
+    }
+
+    public void setSilverMedals(int silverMedals) {
+        this.silverMedals = silverMedals;
+    }
+
+    public int getBronzeMedals() {
+        return bronzeMedals;
+    }
+
+    public void setBronzeMedals(int bronzeMedals) {
+        this.bronzeMedals = bronzeMedals;
+    }
+
+
+
 
 
     // METODOS
-    public void removeFromGroup(){
-        this.points = 0;
-        this.weeklyPoints = 0;
-        this.monthlyPoints = 0;
-        this.groupCode = "";
-        this.administrator = false;
+
+    public static void makeUserAdministrator(String idUser, Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+        builder.setTitle("Hacer administrador");
+        builder.setMessage("¿Quieres hacer administrador a este usuario?");
+
+        // Botón Confirmar
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseRealtimeDatabase.updateUserAdministrator(idUser, true, context);
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    Intent intent = activity.getIntent();
+                    activity.finish();
+                    activity.overridePendingTransition(0, 0); // Evita animación de salida
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(0, 0); // Evita animación de entrada
+                }
+            }
+        });
+
+        // Botón Cancelar
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar el diálogo
+        builder.create().show();
+    }
+
+    public static void makeUserNotAdministrator(String idUser, Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+        builder.setTitle("Quitar de administrador");
+        builder.setMessage("¿Quieres quitar de administrador a este usuario?");
+
+        // Botón Confirmar
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseRealtimeDatabase.updateUserAdministrator(idUser, false, context);
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    Intent intent = activity.getIntent();
+                    activity.finish();
+                    activity.overridePendingTransition(0, 0); // Evita animación de salida
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(0, 0); // Evita animación de entrada
+                }
+            }
+        });
+
+        // Botón Cancelar
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar el diálogo
+        builder.create().show();
+    }
+
+    public static void removeUserFromGroup(String idUser, String groupCode, Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+        builder.setTitle("Expulsar del grupo");
+        builder.setMessage("¿Quieres expulsar del grupo a este usuario?");
+
+        // Botón Confirmar
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseRealtimeDatabase.removeUserFromGroup(idUser, groupCode, context);
+                if (context instanceof Activity) {
+                    Activity activity = (Activity) context;
+                    Intent intent = activity.getIntent();
+                    activity.finish();
+                    activity.overridePendingTransition(0, 0); // Evita animación de salida
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(0, 0); // Evita animación de entrada
+                }
+            }
+        });
+
+        // Botón Cancelar
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar el diálogo
+        builder.create().show();
     }
 }

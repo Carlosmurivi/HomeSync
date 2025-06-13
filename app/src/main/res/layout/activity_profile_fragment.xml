@@ -1,101 +1,299 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <!-- Imagen de Perfil -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="55dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:shapeAppearanceOverlay="@style/RoundImageView" />
-
-    <!-- Título -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hecho"
-        android:textAlignment="center"
-        android:textSize="@dimen/h2"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="200dp"
-        android:visibility="gone"/>
-
-    <!-- Cerrar Sesión -->
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Atrás"
-        android:textSize="@dimen/button"
-        android:layout_marginTop="100dp"
-        app:layout_constraintTop_toBottomOf="@id/textView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:visibility="gone"/>
-
-    <!-- Floating Action Button -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            app:srcCompat="@android:drawable/ic_input_add"
-            app:tint="#181818"
-            android:visibility="gone"/>
-    </RelativeLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Título del Fragment -->
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="PERFIL"
+                android:textAlignment="center"
+                android:textColor="@color/darkBlue"
+                android:textSize="@dimen/title"
+                android:visibility="gone"
+                android:textStyle="bold"/>
+
+            <!-- Linea separatoria -->
+            <View
+                android:id="@+id/separatingLine"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
+                android:layout_marginHorizontal="20dp"
+                android:visibility="gone"
+                android:layout_marginVertical="10dp"/>
+
+            <!-- Imagen de Perfil -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:padding="4dp"
+                android:visibility="gone"
+                app:shapeAppearanceOverlay="@style/RoundImageView"
+                app:strokeColor="@color/black"
+                app:strokeWidth="4dp" />
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/textViewNicknameUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:text="Apodo"
+                android:textAlignment="center"
+                android:textColor="@color/texts"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <!-- Puntos -->
+            <TextView
+                android:id="@+id/textViewPoints"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textAlignment="center"
+                android:textColor="@color/darkBlue"
+                android:textSize="@dimen/h2"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <!-- Medallas de Oro -->
+                    <ImageView
+                        android:id="@+id/imageGoldMedal"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="3dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/medalla_de_oro" />
+
+                    <TextView
+                        android:id="@+id/goldMedal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="0"
+                        android:textColor="@color/gold"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
 
 
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="30dp">
+                    <!-- Medallas de Plata -->
+                    <ImageView
+                        android:id="@+id/imageSilverMedal"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="3dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/medalla_de_plata" />
+
+                    <TextView
+                        android:id="@+id/silverMedal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="0"
+                        android:textColor="@color/silver"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
 
 
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <!-- Medallas de Bronce -->
+                    <ImageView
+                        android:id="@+id/imageBronzeMedal"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="3dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/medalla_de_bronce" />
 
-    <!-- No existe grupo -->
-    <TextView
-        android:id="@+id/createGroupTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No existe ningún grupo"
-        android:textAlignment="center"
-        android:textSize="@dimen/title2"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="220dp"
-        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/bronzeMedal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="0"
+                        android:textColor="@color/bronze"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
 
-    <Button
-        android:id="@+id/createGroupButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Crear Grupo"
-        android:textSize="@dimen/button"
-        android:layout_marginTop="100dp"
-        android:layout_marginHorizontal="65dp"
-        app:layout_constraintTop_toBottomOf="@id/createGroupTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:visibility="gone"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Título de la tabla -->
+                <TextView
+                    android:id="@+id/textViewCompletedTasksUserTable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:text="TAREAS COMPLETADAS"
+                    android:textAlignment="center"
+                    android:textColor="@color/texts"
+                    android:textSize="@dimen/h2"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TableLayout
+                                android:id="@+id/tableLayoutCompletedTaskUser"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/black"
+                                android:padding="4dp"
+                                android:stretchColumns="*"
+                                android:visibility="gone">
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="2dp"
+                                        android:background="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:text="Descripción"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="2dp"
+                                        android:background="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:text="Puntos"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="2dp"
+                                        android:background="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:text="Fecha"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+                                </TableRow>
+                            </TableLayout>
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </ScrollView>
+            </LinearLayout>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <!-- No existe grupo -->
+                <TextView
+                    android:id="@+id/createGroupTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:text="No existe ningún grupo"
+                    android:textAlignment="center"
+                    android:textColor="@color/texts"
+                    android:textSize="@dimen/title2"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/createGroupButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/button"
+                    android:layout_marginTop="75dp"
+                    android:layout_marginRight="@dimen/button"
+                    android:backgroundTint="@color/buttons"
+                    android:text="Crear Grupo"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/button"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/joinGroupButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/button"
+                    android:backgroundTint="@color/buttons"
+                    android:text="Unirse a un Grupo"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/button"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
+

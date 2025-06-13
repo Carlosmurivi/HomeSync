@@ -8,8 +8,17 @@
 
     <color name="buttons">#B437A4</color>
     <color name="texts">#B437A4</color>
+    <color name="fragments">#C87BC3</color>
 
     <color name="blue">#4696F1</color>
+    <color name="darkBlue">#3049F2</color>
 
     <color name="tables">#40DC9D</color>
+
+
+
+    <color name="gold">#DAA520</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="bronze">#CD7F32</color>
+
 </resources>

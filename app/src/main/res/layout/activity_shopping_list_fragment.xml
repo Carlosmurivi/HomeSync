@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Título del Fragment -->
+            <TextView
+                android:id="@+id/shoppingListTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="LISTA DE LA COMPRA"
+                android:textAlignment="center"
+                android:textColor="@color/darkBlue"
+                android:textSize="@dimen/title"
+                android:visibility="gone"
+                android:textStyle="bold"/>
+
+            <!-- Linea separatoria -->
+            <View
+                android:id="@+id/separatingLine"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
+                android:layout_marginHorizontal="20dp"
+                android:visibility="gone"
+                android:layout_marginVertical="10dp"/>
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="80dp"/>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <!-- No existe grupo -->
+        <TextView
+            android:id="@+id/createGroupTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:text="No existe ningún grupo"
+            android:textAlignment="center"
+            android:textColor="@color/texts"
+            android:textSize="@dimen/title2"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/createGroupButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/button"
+            android:layout_marginTop="75dp"
+            android:layout_marginRight="@dimen/button"
+            android:backgroundTint="@color/buttons"
+            android:text="Crear Grupo"
+            android:textColor="@color/white"
+            android:textSize="@dimen/button"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/joinGroupButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button"
+            android:backgroundTint="@color/buttons"
+            android:text="Unirse a un Grupo"
+            android:textColor="@color/white"
+            android:textSize="@dimen/button"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Fab para crear tareas -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/aniadir_producto"
+        android:visibility="gone"
+        app:tint="#FFFFFF" />
+
+    <!-- Fab para crear tareas -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabRestartPurchase"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/recargar"
+        app:tint="#FFFFFF"
+        android:visibility="gone"
+        app:fabCustomSize="56dp" />
+</RelativeLayout>
