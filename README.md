@@ -25,7 +25,6 @@
 - **Almacenamiento de imágenes:** Cloudinary
 - **Control de versiones:** Git y GitHub
 - **Prototipado:** Miro (wireframes)
-- **Gestión del proyecto:** GitHub Projects (opcional)
 
 ---
 
